@@ -64,15 +64,12 @@ Por ahora, en la carpeta de trabajo, dentro de `zepol/`:
 
 Ningún archivo guarda contraseñas, claves ni tokens.
 
-## Servidor de ZEPOL (pendiente)
+## Servidor de ZEPOL
 
-La configuración del servidor MCP remoto está en `mcp/zepol-cloud.json` y ya apunta a Zepol Cloud. Todavía no está activada: falta encender el inicio de sesión (OAuth) en Supabase y publicar la pantalla de permiso del panel. Si se activa antes, Claude intentaría iniciar sesión y fallaría.
+El plugin se conecta a Zepol Cloud, el servidor remoto de ZEPOL, con la configuración de `mcp/zepol-cloud.json`, activada en `.claude-plugin/plugin.json` desde la versión 0.2.0.
 
-Para activarla cuando el inicio de sesión funcione:
-
-1. ~~Cambiar la `url` de `mcp/zepol-cloud.json` por la URL real del servidor MCP.~~ Hecho.
-2. Agrega `"mcpServers": "./mcp/zepol-cloud.json"` en `.claude-plugin/plugin.json`.
-3. Sube la versión del plugin y corre `claude plugin validate .`.
+- La primera vez, Claude pide iniciar sesión: abre el panel de ZEPOL ADS, el alumno entra con su cuenta y toca **Permitir acceso**.
+- Sin una licencia activa, el servidor no entrega la metodología.
 
 Herramientas previstas en el servidor: `metodologia`, `generar_imagen`, `guardar_campana`, `guardar_reporte` y `diagnostico`, más una para guardar el perfil. Los nombres y parámetros finales están por confirmar.
 
@@ -99,7 +96,7 @@ plugin/
     plugin.json
     marketplace.json      marketplace de prueba local zepol-ads-beta
   mcp/
-    zepol-cloud.json      servidor remoto de ZEPOL (URL lista, sin activar)
+    zepol-cloud.json      servidor remoto de ZEPOL (Zepol Cloud)
   skills/
     configurar/           entrevista y esquemas de datos
     armado-seguro/        reglas técnicas del conector de Meta
