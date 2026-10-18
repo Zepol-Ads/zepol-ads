@@ -66,11 +66,11 @@ Ningún archivo guarda contraseñas, claves ni tokens.
 
 ## Servidor de ZEPOL (pendiente)
 
-La configuración del servidor MCP remoto está en `mcp/zepol-cloud.json`, con una URL de relleno. No está activada, para que Claude no intente conectarse a un servidor que todavía no existe.
+La configuración del servidor MCP remoto está en `mcp/zepol-cloud.json` y ya apunta a Zepol Cloud. Todavía no está activada: falta encender el inicio de sesión (OAuth) en Supabase y publicar la pantalla de permiso del panel. Si se activa antes, Claude intentaría iniciar sesión y fallaría.
 
-Para activarla cuando exista Zepol Cloud:
+Para activarla cuando el inicio de sesión funcione:
 
-1. Cambia la `url` de `mcp/zepol-cloud.json` por la URL real del servidor MCP.
+1. ~~Cambiar la `url` de `mcp/zepol-cloud.json` por la URL real del servidor MCP.~~ Hecho.
 2. Agrega `"mcpServers": "./mcp/zepol-cloud.json"` en `.claude-plugin/plugin.json`.
 3. Sube la versión del plugin y corre `claude plugin validate .`.
 
@@ -99,7 +99,7 @@ plugin/
     plugin.json
     marketplace.json      marketplace de prueba local zepol-ads-beta
   mcp/
-    zepol-cloud.json      servidor remoto de ZEPOL, sin activar
+    zepol-cloud.json      servidor remoto de ZEPOL (URL lista, sin activar)
   skills/
     configurar/           entrevista y esquemas de datos
     armado-seguro/        reglas técnicas del conector de Meta

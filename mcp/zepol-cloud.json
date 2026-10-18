@@ -2,7 +2,7 @@
   "mcpServers": {
     "zepol-cloud": {
       "type": "http",
-      "url": "https://TODO-url-del-servidor-zepol.invalid/mcp"
+      "url": "https://gqhruzttereuxtcpargj.supabase.co/functions/v1/mcp"
     }
   }
 }
