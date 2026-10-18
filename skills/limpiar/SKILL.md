@@ -16,13 +16,13 @@ El conector de Meta no puede borrar borradores. Esta skill marca lo que sobra pa
 
 ## Paso 0. Antes de empezar
 
-1. Lee el perfil `zepol/perfil-negocio.json`. Si no existe, pide correr `/zepol-ads:configurar`.
+1. Llama `obtener_perfil`. Si no hay perfiles, pide correr `/zepol-ads:configurar`. Si ZEPOL no está conectado o no hay licencia activa, explícalo como en `/zepol-ads:configurar` y detente.
 2. Carga la skill `armado-seguro`. Aquí aplican sobre todo sus reglas 1 (candado del editor) y 9 (limpieza).
 
 ## Paso 1. Encontrar lo que sobra
 
 1. Lee los borradores con `ads_get_ad_entities` y `object_state=draft`.
-2. Cruza con las recetas de `zepol/recetas/`. TODO(servidor): leerlas desde Zepol Cloud.
+2. Cruza con las recetas guardadas. Por ahora se leen de la copia en `zepol/recetas/`; Zepol Cloud podrá leerlas en la próxima versión.
 3. Son candidatos a limpiar los objetos que no están en ninguna receta vigente o que quedaron dañados (por ejemplo, anuncios sin creativo o conjuntos sin píxel).
 4. La lista del conector puede estar desactualizada: confirma cada candidato con su vista previa (`ads_get_ad_preview`). Si responde "no encontrado", ya no existe y no va en la lista.
 5. Muestra la lista con nombre, ID, tipo y motivo. Pregunta: "¿Marco estos borradores con BORRAR -?" con las opciones "Marcar borradores" y "No marcar nada".
@@ -50,7 +50,7 @@ Da la lista exacta y estos pasos:
 - Muestra qué se va a crear y pregunta: "¿Reconstruyo la campaña {nombre} desde su receta?" con las opciones "Reconstruir campaña" y "Todavía no".
 - Con un "sí", créala como borrador siguiendo `armado-seguro` en su orden completo: validación, revisión antes de publicar y publicación solo con otro "sí" explícito.
 - Marca la versión dañada con "BORRAR -" (pasos 2 y 3).
-- TODO(servidor): leer la receta desde Zepol Cloud y registrar la reconstrucción.
+- Guarda la campaña reconstruida como receta nueva con `guardar_receta`.
 
 ## Paso 5. Cierre
 

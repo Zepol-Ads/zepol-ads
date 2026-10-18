@@ -6,7 +6,7 @@ Asistente para crear, publicar, medir y optimizar campañas de Meta (Facebook e 
 - Nada se publica ni gasta sin tu "sí".
 - Funciona con el conector oficial de Meta (`mcp.facebook.com/ads`) y con tu propia cuenta.
 
-Versión 0.1.0 · esqueleto. La mayoría de los pasos todavía esperan al servidor de ZEPOL (ver "Pendientes").
+Versión 0.3.0. Conectado a Zepol Cloud: el perfil, la metodología, las imágenes y las evaluaciones vienen del servidor.
 
 ## Comandos
 
@@ -54,17 +54,11 @@ Para probar sin instalar, desde una copia local: `claude --plugin-dir ./plugin`.
 
 ## Dónde se guardan tus datos
 
-Por ahora, en la carpeta de trabajo, dentro de `zepol/`:
+En Zepol Cloud, el servidor de ZEPOL, con la cuenta de tu licencia: perfil del negocio (con su diagnóstico), productos, recetas de campaña y pedidos de WhatsApp. Cada alumno solo ve sus propios datos.
 
-| Archivo | Qué guarda |
-|---|---|
-| `zepol/perfil-negocio.json` | Perfil del negocio (formato: `skills/configurar/esquemas/perfil-negocio.schema.json`) |
-| `zepol/productos/{producto}.json` | Datos de cada producto (formato: `skills/configurar/esquemas/producto.schema.json`) |
-| `zepol/diagnostico-{cuenta}.json` | Diagnóstico de la cuenta |
-| `zepol/recetas/{campana}.json` | Receta de cada campaña, para verificar y reconstruir |
-| `zepol/reportes/{campana}-{fecha}.json` | Reportes |
+Mientras Zepol Cloud no pueda leer recetas (llega en la próxima versión), `/zepol-ads:nueva-campana` guarda también una copia en `zepol/recetas/` para `/zepol-ads:verificar` y `/zepol-ads:limpiar`.
 
-Ningún archivo guarda contraseñas, claves ni tokens.
+Ningún dato guarda contraseñas, claves ni tokens. La clave de OpenAI se guarda cifrada desde el panel.
 
 ## Servidor de ZEPOL
 
@@ -73,15 +67,15 @@ El plugin se conecta a Zepol Cloud, el servidor remoto de ZEPOL, con la configur
 - La primera vez, Claude pide iniciar sesión: abre el panel de ZEPOL ADS, el alumno entra con su cuenta y toca **Permitir acceso**.
 - Sin una licencia activa, el servidor no entrega la metodología.
 
-Herramientas previstas en el servidor: `metodologia`, `generar_imagen`, `guardar_campana`, `guardar_reporte` y `diagnostico`, más una para guardar el perfil. Los nombres y parámetros finales están por confirmar.
+Herramientas de Zepol Cloud que usan las skills: `obtener_metodologia`, `obtener_perfil`, `guardar_perfil`, `guardar_producto`, `guardar_receta`, `evaluar_conjuntos`, `registrar_pedidos_whatsapp`, `generar_imagen` y `registrar_feedback`.
 
 ## Pendientes
 
 Las skills marcan cada pendiente en el texto:
 
-- `TODO(servidor)`: depende de Zepol Cloud (metodología, imágenes, alojamiento, guardado en Supabase, licencias).
+- Próxima versión: leer recetas y reportes desde Zepol Cloud y guardar las fotos de los productos.
 - `TODO(prueba)`: hay que confirmarlo con una campaña real (rama WhatsApp, lista de mejoras para videos nuevos, mensaje de bienvenida).
-- `TODO`: falta definir algo en el plugin (formatos de receta, diagnóstico y reporte; guía de permisos).
+- `TODO`: guía de permisos.
 
 Fuera de las skills:
 

@@ -16,8 +16,8 @@ Compara lo que está publicado en Meta contra la receta de la campaña. Solo lee
 
 ## Paso 0. Antes de empezar
 
-1. Lee el perfil `zepol/perfil-negocio.json`. Si no existe, pide correr `/zepol-ads:configurar`.
-2. Pregunta qué campaña verificar si no lo dijo. Lista las recetas de `zepol/recetas/`. TODO(servidor): leerlas desde Zepol Cloud.
+1. Llama `obtener_perfil`. Si no hay perfiles, pide correr `/zepol-ads:configurar`. Si ZEPOL no está conectado o no hay licencia activa, explícalo como en `/zepol-ads:configurar` y detente.
+2. Pregunta qué campaña verificar si no lo dijo. Por ahora las recetas se leen de la copia en `zepol/recetas/`; Zepol Cloud podrá leerlas en la próxima versión.
 3. Si no hay receta de esa campaña: "No tengo la receta de esta campaña, así que no puedo compararla. Solo puedo verificar las campañas creadas con /zepol-ads:nueva-campana."
 4. Carga la skill `armado-seguro`.
 
@@ -51,4 +51,4 @@ Regla 11 de `armado-seguro`. Arma una tabla con cada punto, lo esperado, lo publ
 ## Paso 4. Cierre
 
 - Actualiza la receta con los IDs nuevos, si se recreó algo.
-- TODO(servidor): registrar la verificación en Zepol Cloud.
+- Si se recreó algo, actualiza también la receta en Zepol Cloud con `guardar_receta` y su `id`, si lo tienes.

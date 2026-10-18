@@ -1,6 +1,6 @@
 ---
 name: nueva-campana
-description: Arma una campaña nueva de Meta para un producto con ZEPOL ADS, a WhatsApp o a Shopify (web contra entrega). Pide los datos del producto, trae la metodología del servidor de ZEPOL, crea todo como borrador con las reglas de armado seguro, guarda la receta, hace la revisión antes de publicar y publica solo con un sí explícito del alumno. Úsala cuando el alumno escriba /zepol-ads:nueva-campana o pida lanzar, crear o testear un producto en Meta.
+description: Arma una campaña nueva de Meta para un producto con ZEPOL ADS, a WhatsApp o a Shopify (web contra entrega). Pide los datos del producto, trae la metodología de Zepol Cloud, crea todo como borrador con las reglas de armado seguro, guarda la receta, hace la revisión antes de publicar y publica solo con un sí explícito del alumno. Úsala cuando el alumno escriba /zepol-ads:nueva-campana o pida lanzar, crear o testear un producto en Meta.
 ---
 
 # Nueva campaña
@@ -13,76 +13,78 @@ Arma la campaña de un producto. Todo se crea como borrador y nada se publica ni
 - Directo y concreto, en primera persona del singular ("Armo tu campaña"), nunca "nosotros".
 - Llamados a la acción con verbo + objeto: "Crear borrador", "Publicar campaña", "Cambiar un texto".
 - Errores con la forma qué pasó + cómo arreglarlo.
-- Excepción: los textos de los anuncios para Meta sí pueden llevar emojis. Los define el servidor de ZEPOL.
+- Excepción: los textos de los anuncios para Meta sí pueden llevar emojis. Salen de la metodología de Zepol Cloud.
 
-## Metodología: siempre del servidor
+## Metodología: siempre de Zepol Cloud
 
-- La metodología de ZEPOL vive en el servidor de ZEPOL, no en este plugin: estructura, objetivo, presupuestos, públicos, ubicaciones, nombres, horarios, creativos y textos.
-- Pídela con la herramienta `metodologia` del servidor de ZEPOL. TODO(servidor): la herramienta aún no existe; nombre y parámetros por confirmar.
-- Si el servidor no está conectado (no ves sus herramientas), no improvises: no inventes estructuras, presupuestos, públicos, textos ni horarios con tu propio criterio. Di: "El servidor de ZEPOL aún no está conectado, así que todavía no puedo armar la campaña. Ya guardé los datos de tu producto. Cuando esté listo, vuelve a correr /zepol-ads:nueva-campana." y detente.
+- La metodología de ZEPOL vive en Zepol Cloud, no en este plugin: estructura, objetivo, presupuestos, públicos, ubicaciones, nombres, horarios, configuración, creativos y textos.
+- Pídela con `obtener_metodologia`, por etapa (`estructura`, `configuracion`, `creativos`, `textos`) y con el canal de la campaña (`whatsapp` o `shopify`).
+- No improvises: no inventes estructuras, presupuestos, públicos, textos ni horarios con tu propio criterio. Si a las reglas les falta algo para tu caso, pregúntale al alumno.
+- Si no ves las herramientas de Zepol Cloud (por ejemplo `obtener_perfil`), ZEPOL no está conectado. Di: "ZEPOL ADS no está conectado. En la app de Claude, entra a Configuración → Conectores y conecta ZEPOL ADS. En Claude Code, escribe /mcp y autentica zepol-cloud. Después vuelve a correr /zepol-ads:nueva-campana." y detente.
+- Si una herramienta de Zepol Cloud responde que la cuenta no tiene una licencia activa, muestra ese mensaje tal cual y detente.
 
 ## Paso 0. Antes de empezar
 
-1. Lee el perfil `zepol/perfil-negocio.json`. Si no existe: "No encuentro tu perfil de negocio. Corre /zepol-ads:configurar primero; toma unos 5 minutos."
+1. Llama `obtener_perfil`. Si no hay perfiles: "No encuentro tu perfil de negocio. Corre /zepol-ads:configurar primero; toma unos 5 minutos." Si hay varios, pregunta con qué negocio trabajas.
 2. Confirma que el conector de Meta está disponible. Si no: "No encuentro el conector de Meta. Conéctalo desde la sección Conectores de Claude y vuelve a correr /zepol-ads:nueva-campana."
-3. Busca un diagnóstico de la cuenta (`zepol/diagnostico-{cuenta_publicitaria_id}.json`). Si no hay, ofrece: "Antes de armar la campaña conviene estudiar tu cuenta. ¿Corro el diagnóstico primero?" con las opciones "Correr diagnóstico" y "Seguir sin diagnóstico".
+3. Revisa si el perfil trae un `diagnostico` (lo guarda /zepol-ads:diagnostico). Si no hay, ofrece: "Antes de armar la campaña conviene estudiar tu cuenta. ¿Corro el diagnóstico primero?" con las opciones "Correr diagnóstico" y "Seguir sin diagnóstico".
 4. Carga la skill `armado-seguro`. Todo lo que se cree o edite en Meta sigue sus reglas, en su orden.
 
 ## Paso 1. Datos del producto
 
-Pide los datos con el formato de `producto.schema.json` de la skill `configurar` (`../configurar/esquemas/producto.schema.json` desde la carpeta de esta skill). Si ya existe `zepol/productos/{slug}.json`, muéstralo y pregunta solo lo que cambió.
+Pide los datos que guarda `guardar_producto`. Si el producto ya está en el perfil (`obtener_perfil` trae los productos), muéstralo y pregunta solo lo que cambió.
 
 | Campo | Pregunta |
 |---|---|
 | `nombre` | "¿Qué producto vas a anunciar?" |
 | `precio_venta` | "¿A cuánto lo vendes? Aunque no lo muestres en el anuncio, lo necesito para medir si la campaña es rentable." |
 | `margen_bajo` | "¿Dirías que el margen de este producto es bajo?" |
-| `creativos_disponibles` | "¿Qué creativos tienes de este producto: videos, imágenes, los dos o ninguno?" Luego pide cada uno: archivo, URL o ID de la publicación. |
-| `fotos_producto` | "¿Tienes fotos reales del producto? Pásame una o varias." |
-| `complejo_o_personas_mayores` | "¿El producto es difícil de explicar o es para personas mayores?" |
+| `creativos_disponibles` | "¿Qué creativos tienes de este producto: videos, imágenes, los dos o ninguno?" (`videos`, `imagenes`, `ambos` o `ninguno`). Luego pide cada uno: archivo, URL o ID de la publicación. |
+| Fotos del producto | "¿Tienes fotos reales del producto? Pásame el enlace público de una o varias." Por ahora no se guardan en Zepol Cloud: úsalas al generar las imágenes. |
+| `es_complejo` y `para_personas_mayores` | "¿El producto es difícil de explicar? ¿Es para personas mayores?" |
 | `landing_url` | Solo si la campaña va a Shopify: "¿Cuál es el enlace del producto en tu tienda?" Debe empezar con https://. |
 
 - No calcules el margen: cada negocio conoce sus números.
-- Guarda el producto en `zepol/productos/{slug}.json` con tu herramienta de escritura de archivos. TODO(servidor): guardarlo en Zepol Cloud.
+- Guarda el producto con `guardar_producto`, con el `perfil_id` del perfil. Si ya existía, envía su `id` para actualizarlo.
 
 ## Paso 2. Canal: WhatsApp o Shopify
 
-- `negocio.tipo = solo_shopify` → Shopify.
-- `negocio.tipo = solo_whatsapp` → WhatsApp.
-- `negocio.tipo = hibrido` → pregunta: "¿A dónde quieres llevar a la gente con esta campaña?" con las opciones "A mi tienda Shopify" y "A mi WhatsApp".
-  - TODO(servidor): pedir a `metodologia` la recomendación de canal para este negocio y este producto, y mostrarla antes de que el alumno elija. El alumno decide.
+- `tipo_negocio = shopify` → Shopify.
+- `tipo_negocio = whatsapp` → WhatsApp.
+- `tipo_negocio = hibrido` → pregunta: "¿A dónde quieres llevar a la gente con esta campaña?" con las opciones "A mi tienda Shopify" y "A mi WhatsApp".
+  - Si la metodología (`obtener_metodologia` con `etapa = estructura`) recomienda un canal para este negocio y este producto, muéstralo antes de que el alumno elija. El alumno decide.
 
 ## Paso 3. Pedir la metodología
 
-- TODO(servidor): llamar a `metodologia` con la etapa `nueva_campana`, el canal, el perfil, el producto y el diagnóstico.
-- Debe devolver la especificación completa de la campaña: objetivo, optimización, estructura, presupuestos, públicos, ubicaciones, nombres, recomendación de inicio y el plan de creativos y textos.
-- Si no hay servidor, detente con el mensaje de la sección "Metodología: siempre del servidor".
+- Llama `obtener_metodologia` con el canal elegido para las etapas `estructura`, `configuracion`, `creativos` y `textos`.
+- Con esas reglas, el perfil, el producto y el diagnóstico, arma la especificación completa de la campaña: objetivo, optimización, estructura, presupuestos, públicos, ubicaciones, nombres, recomendación de inicio y el plan de creativos y textos.
+- Aplica solo lo que dicen las reglas. Si algo no está cubierto, pregúntale al alumno.
 
 ## Paso 4. Rama según el canal
 
 ### Rama Shopify (web contra entrega)
 
-1. **Landing**: revisa que `landing_url` responda (HTTP 200) y que tenga el formulario contra entrega de la app del perfil (`entregas.app_formulario`).
+1. **Landing**: revisa que `landing_url` responda (HTTP 200) y que tenga el formulario contra entrega de la app del perfil (`app_formulario`).
    - Si no responde: "Tu landing no responde. Revisa que el producto esté publicado en Shopify y vuelve a intentarlo."
-   - TODO(servidor): el resto de la revisión de la landing lo define el servidor.
-2. **Píxel**: el conjunto usa el píxel del perfil (`meta.pixel_id`) con el evento de compra. Si el perfil no tiene píxel, detente: "Tu perfil no tiene píxel. Créalo en el Administrador de eventos, corre /zepol-ads:configurar para elegirlo y vuelve aquí."
+   - El resto de la revisión de la landing está en la metodología (`configuracion`, canal `shopify`).
+2. **Píxel**: el conjunto usa el píxel del perfil (`meta_pixel_id`) con el evento de compra. Si el perfil no tiene píxel, detente: "Tu perfil no tiene píxel. Créalo en el Administrador de eventos, corre /zepol-ads:configurar para elegirlo y vuelve aquí."
 3. **Enlaces**: cada anuncio lleva `landing_url` como destino y las UTM de la regla 6 de `armado-seguro`.
-4. El botón lo define el servidor.
+4. El botón sale de la metodología (`textos`).
 
 ### Rama WhatsApp
 
-1. **Número**: la página del perfil necesita el número de WhatsApp Business (`meta.whatsapp_numero`) vinculado y verificado. `meta.whatsapp_vinculado` dice lo que respondió el alumno, pero no lo confirma. Si no lo está: "Tu número de WhatsApp no está vinculado a tu página. Vincúlalo en la configuración de WhatsApp de tu página y vuelve a intentarlo." Sin ese vínculo el borrador se crea, pero no se puede publicar.
+1. **Número**: la página del perfil necesita el número de WhatsApp Business (`whatsapp_numero`) vinculado y verificado. El perfil guarda el número, pero no confirma el vínculo. Si no lo está: "Tu número de WhatsApp no está vinculado a tu página. Vincúlalo en la configuración de WhatsApp de tu página y vuelve a intentarlo." Sin ese vínculo el borrador se crea, pero no se puede publicar.
 2. **Destino**: el conjunto lleva `destination_type: WHATSAPP` y el botón es `WHATSAPP_MESSAGE`, sin enlace web ni UTM.
-3. **Mensaje de bienvenida**: TODO(servidor): el texto lo entrega el servidor. TODO(prueba): el conector no lo configura en el creativo; confirmar en la primera prueba cómo cargarlo.
+3. **Mensaje de bienvenida**: el texto sale de la metodología (`configuracion`, canal `whatsapp`). TODO(prueba): el conector no lo configura en el creativo; confirmar en la primera prueba cómo cargarlo.
 4. TODO(prueba): la rama WhatsApp todavía no se probó de punta a punta con el conector. En la primera campaña, revisa cada paso con el alumno en el Administrador.
 
 ## Paso 5. Creativos
 
-- **Ganadores que se reutilizan**: van por su publicación (`object_story_id` + `url_tags`), con la regla 5 de `armado-seguro`. TODO(servidor): cuáles se reutilizan lo decide el servidor con el diagnóstico.
-- **Imágenes nuevas**: TODO(servidor): generarlas con la herramienta `generar_imagen` de Zepol Cloud, a partir de la foto real del producto. El servidor las aloja y devuelve una URL pública. Súbelas a la cuenta con `ads_creative_upload_media`.
-  - Sin servidor: "Todavía no puedo generar imágenes: el servidor de ZEPOL aún no está conectado."
-- **Videos o imágenes del alumno**: necesitan una URL pública para subirse. TODO(servidor): alojarlos en Zepol Cloud. No uses alojamientos temporales públicos.
-- **Textos**: TODO(servidor): los entrega el servidor. Muéstralos tal cual al alumno; si pide cambios, pide al servidor la versión corregida.
+- **Ganadores que se reutilizan**: van por su publicación (`object_story_id` + `url_tags`), con la regla 5 de `armado-seguro`. Cuáles se reutilizan sale de la metodología (`creativos`) y del diagnóstico.
+- **Imágenes nuevas**: genéralas con `generar_imagen` (`producto_id`, `temperatura`, `angulo`, los textos y la foto real del producto en `foto_producto_url`). Usa la clave de OpenAI que el alumno guardó en su panel. Zepol Cloud aloja cada imagen y devuelve una URL pública: súbela a la cuenta con `ads_creative_upload_media`.
+  - Si `generar_imagen` dice que falta la clave de OpenAI, pide guardarla en "Mi cuenta" del panel de ZEPOL ADS. No la pidas en el chat.
+- **Videos o imágenes del alumno**: necesitan una URL pública para subirse. Por ahora pídele al alumno un enlace público propio (por ejemplo, de su tienda). No uses alojamientos temporales públicos.
+- **Textos**: escríbelos con la metodología (`textos`), que trae las estructuras y los bancos de frases. Muéstralos al alumno; si pide cambios, ajústalos respetando esas reglas.
 
 ## Paso 6. Propuesta y aprobación
 
@@ -107,10 +109,10 @@ Usa `hide_ui: true` cuando crees muchos objetos seguidos. Si una llamada falla, 
 
 ## Paso 8. Guardar la receta
 
-- Guarda la especificación completa de la campaña y los IDs de cada objeto en `zepol/recetas/{slug-de-la-campana}.json`, apenas se cree.
+- Apenas se cree, guarda la receta en Zepol Cloud con `guardar_receta`: `perfil_id`, `producto_id`, `canal`, `nombre_campana`, `estado = borrador`, `meta_campaign_id` y en `receta` la especificación completa con los IDs de cada objeto.
+- Al publicar, actualízala con su `id`, `estado = publicada`.
 - La receta sirve para verificar lo publicado, reconstruir si algo se daña y relanzar la misma estructura con otro producto.
-- TODO: definir el formato de la receta.
-- TODO(servidor): guardarla en Zepol Cloud con la herramienta `guardar_campana`.
+- Mientras Zepol Cloud no pueda leer recetas (llega en la próxima versión), guarda también una copia en `zepol/recetas/{slug-de-la-campana}.json` si puedes escribir archivos. La usan /zepol-ads:verificar y /zepol-ads:limpiar.
 
 ## Paso 9. Validar el borrador
 
@@ -141,5 +143,5 @@ Regla 10 de `armado-seguro`. Pregunta: "¿Publico la campaña {nombre}? Empezar�
 
 1. Haz la verificación después de publicar (regla 11 de `armado-seguro`, o `/zepol-ads:verificar`).
 2. Confirma en una línea qué quedó publicado y desde cuándo.
-3. En WhatsApp, recuerda: "Anota tus pedidos de WhatsApp de cada día para que el reporte calcule tu costo por pedido entregado." TODO(servidor): dónde se anotan (panel de ZEPOL).
-4. TODO(servidor): cuándo correr el primer `/zepol-ads:reporte`.
+3. En WhatsApp, recuerda: "Cada día dime cuántos pedidos confirmados, entregados y devueltos tuviste, y los registro para calcular tu costo por pedido entregado." Regístralos con `registrar_pedidos_whatsapp`.
+4. Termina con: "Desde mañana, corre /zepol-ads:optimizar cada mañana. Para ver tus números, usa /zepol-ads:reporte."

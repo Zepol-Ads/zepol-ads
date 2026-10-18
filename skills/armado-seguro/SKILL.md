@@ -179,7 +179,7 @@ No hay certeza de qué nombre de la API apaga "Lo más destacado del sitio web".
 }
 ```
 
-- Declaración de IA (`self_ai_disclosure`): no la decidas tú. Muéstrasela al alumno para que elija; TODO(servidor): la recomendación la da el servidor. No se puede cambiar después de crear el creativo.
+- Declaración de IA (`self_ai_disclosure`): no la decidas tú. La recomendación sale de la metodología (`obtener_metodologia`, etapa `configuracion`); muéstrasela al alumno y que él elija. No se puede cambiar después de crear el creativo.
 - TODO(prueba): anuncios de imagen a WhatsApp. El botón es `WHATSAPP_MESSAGE` y no lleva enlace web (ver regla 12). Confirmar en la primera prueba si se arma en línea igual que este formato o con `ads_create_creative`.
 
 ## 5. Reutilizar ganadores: object_story_id + url_tags
@@ -216,8 +216,8 @@ No hay certeza de qué nombre de la API apaga "Lo más destacado del sitio web".
 
 ## 7. Inicio programado en la zona horaria de la cuenta
 
-- Lee la zona horaria de la cuenta: `meta.zona_horaria` del perfil o `timezone_name` en `level = ad_account` con `ads_get_ad_entities`.
-- La fecha y la hora de inicio las elige el alumno. TODO(servidor): la recomendación de cuándo lanzar la da el servidor.
+- Lee la zona horaria de la cuenta: `zona_horaria` del perfil o `timezone_name` en `level = ad_account` con `ads_get_ad_entities`.
+- La fecha y la hora de inicio las elige el alumno. La recomendación de cuándo lanzar sale de la metodología (etapa `estructura`).
 - Envía la hora en ISO 8601 con el desfase de esa zona. Perú (`America/Lima`) es `-05:00` todo el año, sin horario de verano. Ejemplo: `2026-10-23T08:00:00-05:00`.
 - Pon `start_time` en cada conjunto. Nunca dejes el inicio en "ahora" por omisión.
 - Verifícalo en el borrador (regla 8) y después de publicar (regla 11): el editor abierto puede cambiarlo a "ahora".
@@ -278,7 +278,7 @@ Si falta algo o no coincide:
 ## 12. Otros datos técnicos del conector
 
 - Pide solo los campos que necesitas en `ads_get_ad_entities`: las respuestas son grandes y consumen el plan de Claude del alumno.
-- Las imágenes se suben por URL pública. TODO(servidor): las aloja Zepol Cloud. No uses alojamientos temporales públicos.
+- Las imágenes se suben por URL pública. Las de `generar_imagen` ya vienen alojadas en Zepol Cloud. No uses alojamientos temporales públicos.
 - WhatsApp. TODO(prueba): todavía sin probar de punta a punta.
   - El conjunto lleva `destination_type: WHATSAPP` y el botón es `WHATSAPP_MESSAGE`, sin enlace web.
   - La página necesita un número de WhatsApp Business verificado y vinculado. Sin eso, el borrador se crea, pero la publicación falla.
