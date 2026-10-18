@@ -34,21 +34,23 @@ Sí están aquí las reglas técnicas de seguridad del conector de Meta (`skills
 - El conector oficial de Meta conectado con tu cuenta de Facebook.
 - Una cuenta publicitaria de Perú con método de pago.
 
-## Instalación de prueba local (Claude Code)
+## Instalación (canal beta)
 
-Agrega esta carpeta como marketplace e instala el plugin:
+**En la app de Claude:** en Configuración → Plugins, agrega el marketplace `Zepol-Ads/zepol-ads` e instala **zepol-ads**.
+
+**En Claude Code:**
 
 ```bash
-claude plugin marketplace add ./plugin
+claude plugin marketplace add Zepol-Ads/zepol-ads
 ```
 
 ```bash
 claude plugin install zepol-ads@zepol-ads-beta
 ```
 
-El primer comando se corre desde la carpeta que contiene `plugin/`. En Windows funciona igual, desde PowerShell o desde la terminal de Claude Code. Después, reinicia Claude Code y escribe `/zepol-ads:configurar`.
+Después, reinicia Claude y escribe `/zepol-ads:configurar`. La primera vez, Claude te pide iniciar sesión en ZEPOL ADS con la cuenta de tu licencia.
 
-Para probar sin instalar, también puedes abrir Claude Code con `claude --plugin-dir ./plugin`.
+Para probar sin instalar, desde una copia local: `claude --plugin-dir ./plugin`.
 
 ## Dónde se guardan tus datos
 
@@ -84,7 +86,7 @@ Las skills marcan cada pendiente en el texto:
 Fuera de las skills:
 
 - URL pública del repositorio, licencia y correo de contacto en `plugin.json`.
-- Segundo marketplace estable (`zepol-ads`) cuando exista el repositorio en GitHub.
+- Segundo marketplace estable (`zepol-ads`) para la venta.
 - Guía de instalación para Windows y para la app de Claude.
 - Permisos: un plugin no puede traer reglas de permiso, así que la guía de instalación debe explicar qué herramientas de lectura aprobar de una vez.
 
@@ -94,7 +96,7 @@ Fuera de las skills:
 plugin/
   .claude-plugin/
     plugin.json
-    marketplace.json      marketplace de prueba local zepol-ads-beta
+    marketplace.json      marketplace beta zepol-ads-beta
   mcp/
     zepol-cloud.json      servidor remoto de ZEPOL (Zepol Cloud)
   skills/

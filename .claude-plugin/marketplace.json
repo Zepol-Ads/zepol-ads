@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "zepol-ads-beta",
-  "description": "Canal beta de ZEPOL ADS. Marketplace de prueba local: apunta a esta misma carpeta.",
+  "description": "Canal beta de ZEPOL ADS: asistente de campañas de Meta para ecommerce contra entrega en Perú.",
   "owner": {
     "name": "Alexis López"
   },
