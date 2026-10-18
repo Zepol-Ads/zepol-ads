@@ -21,12 +21,14 @@ Cada día, revisa los conjuntos activos y **propone** una acción para cada uno.
 - No calcules ni inventes acciones por tu cuenta, ni con tu propio criterio.
 - Si no ves las herramientas de Zepol Cloud (`obtener_perfil`, `evaluar_conjuntos`), ZEPOL no está conectado. Di: "ZEPOL ADS no está conectado. En la app de Claude, entra a Configuración → Conectores y conecta ZEPOL ADS. En Claude Code, escribe /mcp y autentica zepol-cloud. Después vuelve a correr /zepol-ads:optimizar." y detente.
 - Si una herramienta de Zepol Cloud responde que la cuenta no tiene una licencia activa, muestra ese mensaje tal cual y detente.
+- Si un paso falla por un error de Meta o de Zepol Cloud, explícaselo al alumno y regístralo con `registrar_error` (`comando = optimizar`, el paso, el código si lo hay y un mensaje corto). Nunca envíes claves, tokens, correos ni datos de clientes.
 
 ## Paso 0. Antes de empezar
 
 1. Llama `obtener_perfil`. Si no hay perfiles, pide correr `/zepol-ads:configurar` y detente. Si hay varios, pregunta con qué negocio trabajas.
 2. Del perfil usa `meta_cuenta_publicitaria_id`. Si no está, pídele al alumno el ID de su cuenta publicitaria.
 3. Carga la skill `armado-seguro`.
+4. Trae las recetas con `listar_recetas` para saber qué campaña tiene receta (por su `meta_campaign_id`). Una campaña sin receta se optimiza igual; al final puedes ofrecer adoptarla con `/zepol-ads:verificar`.
 
 ## Paso 1. Leer los resultados en Meta
 
@@ -86,7 +88,17 @@ Solo lo que el alumno aprobó, con las reglas de `armado-seguro`:
 4. Verifica cada cambio leyendo el objeto publicado con `ads_get_ad_entities`. Si no se ve el cambio, di que está pendiente; no lo des por hecho.
 5. Pide refrescar el Administrador de anuncios antes de abrirlo.
 
-## Paso 6. Cierre
+## Paso 6. Guardar la optimización
+
+Guarda una optimización por campaña con `guardar_reporte`, con el formato que trae la herramienta:
+
+- `origen = optimizacion`, el `perfil_id`, el `receta_id` si la campaña tiene receta y el periodo leído;
+- los totales de la campaña y, en `metricas`, la campaña con su ID de Meta, el canal y la tabla por conjunto;
+- en `recomendaciones`, una por conjunto: la acción y el motivo que devolvió `evaluar_conjuntos`, el presupuesto actual y el nuevo, si el alumno la aprobó (`aprobada`) y si quedó aplicada y verificada en Meta (`aplicada`).
+
+Guárdala también si el alumno no aprobó nada: sirve para comparar mañana.
+
+## Paso 7. Cierre
 
 - Resume en una línea qué cambió y qué quedó igual.
 - Si algún conjunto quedó como "Tú decides" y el alumno no respondió, recuérdaselo.

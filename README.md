@@ -6,19 +6,21 @@ Asistente para crear, publicar, medir y optimizar campañas de Meta (Facebook e 
 - Nada se publica ni gasta sin tu "sí".
 - Funciona con el conector oficial de Meta (`mcp.facebook.com/ads`) y con tu propia cuenta.
 
-Versión 0.3.0. Conectado a Zepol Cloud: el perfil, la metodología, las imágenes y las evaluaciones vienen del servidor.
+Versión 0.4.0. Todos los comandos usan Zepol Cloud: el perfil, los productos, la metodología, las imágenes, las recetas, los diagnósticos y los reportes viven en el servidor. Falta la prueba en vivo de punta a punta.
 
 ## Comandos
 
-| Comando | Qué hace | Estado |
-|---|---|---|
-| `/zepol-ads:configurar` | Entrevista corta para crear el perfil de tu negocio | Lista |
-| `/zepol-ads:diagnostico` | Estudia tu cuenta: accesos, historial por producto y ganadores | Esqueleto |
-| `/zepol-ads:nueva-campana` | Arma una campaña a WhatsApp o a Shopify como borrador y la publica con tu aprobación | Esqueleto |
-| `/zepol-ads:verificar` | Compara lo publicado contra la receta de la campaña | Esqueleto |
-| `/zepol-ads:reporte` | Métricas y costo por pedido entregado | Esqueleto |
-| `/zepol-ads:optimizar` | Propone acciones diarias; no aplica nada sin tu aprobación | Esqueleto |
-| `/zepol-ads:limpiar` | Marca borradores obsoletos y reconstruye desde la receta | Esqueleto |
+| Comando | Qué hace |
+|---|---|
+| `/zepol-ads:configurar` | Entrevista corta para crear el perfil de tu negocio |
+| `/zepol-ads:diagnostico` | Estudia tu cuenta (accesos, historial por producto y ganadores) y guarda el diagnóstico |
+| `/zepol-ads:nueva-campana` | Arma una campaña a WhatsApp o a Shopify como borrador, guarda su receta y la publica con tu aprobación |
+| `/zepol-ads:verificar` | Compara lo publicado contra la receta de la campaña; adopta como receta una campaña creada por tu cuenta |
+| `/zepol-ads:reporte` | Métricas y costo por pedido entregado; guarda el reporte |
+| `/zepol-ads:optimizar` | Propone acciones diarias, no aplica nada sin tu aprobación y guarda lo que se decidió |
+| `/zepol-ads:limpiar` | Marca borradores obsoletos y reconstruye desde la receta |
+| `/zepol-ads:feedback` | Le envía a Alexis tu comentario, una idea o un problema |
+| `/zepol-ads:novedades` | Novedades de ZEPOL y el estado de tu cuenta (licencia, imágenes y versión) |
 
 `armado-seguro` no es un comando: son las reglas técnicas que las demás skills siguen cada vez que crean, editan o publican en Meta.
 
@@ -54,9 +56,7 @@ Para probar sin instalar, desde una copia local: `claude --plugin-dir ./plugin`.
 
 ## Dónde se guardan tus datos
 
-En Zepol Cloud, el servidor de ZEPOL, con la cuenta de tu licencia: perfil del negocio (con su diagnóstico), productos, recetas de campaña y pedidos de WhatsApp. Cada alumno solo ve sus propios datos.
-
-Mientras Zepol Cloud no pueda leer recetas (llega en la próxima versión), `/zepol-ads:nueva-campana` guarda también una copia en `zepol/recetas/` para `/zepol-ads:verificar` y `/zepol-ads:limpiar`.
+En Zepol Cloud, el servidor de ZEPOL, con la cuenta de tu licencia: perfil del negocio (con su diagnóstico), productos (con sus fotos), recetas de campaña, reportes, creativos y pedidos de WhatsApp. Cada alumno solo ve sus propios datos. El plugin no guarda archivos locales.
 
 Ningún dato guarda contraseñas, claves ni tokens. La clave de OpenAI se guarda cifrada desde el panel.
 
@@ -67,13 +67,20 @@ El plugin se conecta a Zepol Cloud, el servidor remoto de ZEPOL, con la configur
 - La primera vez, Claude pide iniciar sesión: abre el panel de ZEPOL ADS, el alumno entra con su cuenta y toca **Permitir acceso**.
 - Sin una licencia activa, el servidor no entrega la metodología.
 
-Herramientas de Zepol Cloud que usan las skills: `obtener_metodologia`, `obtener_perfil`, `guardar_perfil`, `guardar_producto`, `guardar_receta`, `evaluar_conjuntos`, `registrar_pedidos_whatsapp`, `generar_imagen` y `registrar_feedback`.
+Herramientas de Zepol Cloud que usan las skills:
+
+- perfil y productos: `obtener_perfil`, `guardar_perfil`, `guardar_producto` y `guardar_diagnostico`;
+- metodología: `obtener_metodologia` y `evaluar_conjuntos`;
+- campañas: `generar_imagen`, `guardar_receta`, `listar_recetas` y `obtener_receta`;
+- resultados: `guardar_reporte`, `listar_reportes`, `registrar_pedidos_whatsapp` y `obtener_pedidos_whatsapp`;
+- cuenta: `estado_cuenta`, `obtener_novedades`, `registrar_feedback` y `registrar_error`.
+
+Los formatos de las recetas, los reportes y los diagnósticos los define el servidor y llegan con cada herramienta.
 
 ## Pendientes
 
 Las skills marcan cada pendiente en el texto:
 
-- Próxima versión: leer recetas y reportes desde Zepol Cloud y guardar las fotos de los productos.
 - `TODO(prueba)`: hay que confirmarlo con una campaña real (rama WhatsApp, lista de mejoras para videos nuevos, mensaje de bienvenida).
 - `TODO`: guía de permisos.
 
@@ -81,6 +88,7 @@ Fuera de las skills:
 
 - URL pública del repositorio, licencia y correo de contacto en `plugin.json`.
 - Segundo marketplace estable (`zepol-ads`) para la venta.
+- Al subir la versión, cámbiala en `plugin.json`, en `marketplace.json` y en `skills/novedades` (la envía a `estado_cuenta`).
 - Guía de instalación para Windows y para la app de Claude.
 - Permisos: un plugin no puede traer reglas de permiso, así que la guía de instalación debe explicar qué herramientas de lectura aprobar de una vez.
 
@@ -94,7 +102,7 @@ plugin/
   mcp/
     zepol-cloud.json      servidor remoto de ZEPOL (Zepol Cloud)
   skills/
-    configurar/           entrevista y esquemas de datos
+    configurar/           entrevista del perfil del negocio
     armado-seguro/        reglas técnicas del conector de Meta
     diagnostico/
     nueva-campana/
@@ -102,4 +110,6 @@ plugin/
     reporte/
     optimizar/
     limpiar/
+    feedback/
+    novedades/
 ```

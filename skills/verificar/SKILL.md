@@ -1,6 +1,6 @@
 ---
 name: verificar
-description: Compara una campaña publicada en Meta contra su receta guardada por ZEPOL ADS (anuncios por conjunto, estados, presupuestos, hora de inicio, catálogo, mejoras, píxel y UTM) y ofrece recrear lo que falte, siempre con aprobación. Úsala cuando el alumno escriba /zepol-ads:verificar, justo después de publicar o cuando sospeche que algo cambió en una campaña.
+description: Compara una campaña publicada en Meta contra su receta guardada en Zepol Cloud (anuncios por conjunto, estados, presupuestos, hora de inicio, catálogo, mejoras, píxel y UTM) y ofrece recrear lo que falte, siempre con aprobación. Si la campaña no tiene receta, ofrece adoptarla como receta. Úsala cuando el alumno escriba /zepol-ads:verificar, justo después de publicar, cuando sospeche que algo cambió en una campaña o cuando quiera que ZEPOL siga una campaña que creó por su cuenta.
 ---
 
 # Verificar una campaña
@@ -17,9 +17,11 @@ Compara lo que está publicado en Meta contra la receta de la campaña. Solo lee
 ## Paso 0. Antes de empezar
 
 1. Llama `obtener_perfil`. Si no hay perfiles, pide correr `/zepol-ads:configurar`. Si ZEPOL no está conectado o no hay licencia activa, explícalo como en `/zepol-ads:configurar` y detente.
-2. Pregunta qué campaña verificar si no lo dijo. Por ahora las recetas se leen de la copia en `zepol/recetas/`; Zepol Cloud podrá leerlas en la próxima versión.
-3. Si no hay receta de esa campaña: "No tengo la receta de esta campaña, así que no puedo compararla. Solo puedo verificar las campañas creadas con /zepol-ads:nueva-campana."
-4. Carga la skill `armado-seguro`.
+2. Si el alumno no dijo qué campaña verificar, lista sus recetas con `listar_recetas` (estados `borrador`, `publicada` y `pausada`) y pregunta cuál.
+3. Trae la receta completa con `obtener_receta`, por su `id` o por el ID de la campaña en Meta (`meta_campaign_id`).
+4. Si no hay receta de esa campaña, dilo y ofrece adoptarla: "No tengo la receta de esta campaña, así que no puedo compararla. ¿La adopto como receta para que ZEPOL la siga desde hoy?" con las opciones "Adoptar campaña" y "No por ahora". Si acepta, sigue el "Paso 5. Adoptar una campaña como receta" y termina.
+5. Carga la skill `armado-seguro`.
+6. Si un paso falla por un error de Meta o de Zepol Cloud, explícaselo al alumno y regístralo con `registrar_error` (`comando = verificar`, el paso, el código si lo hay y un mensaje corto). Nunca envíes claves, tokens, correos ni datos de clientes.
 
 ## Paso 1. Leer lo publicado
 
@@ -50,5 +52,19 @@ Regla 11 de `armado-seguro`. Arma una tabla con cada punto, lo esperado, lo publ
 
 ## Paso 4. Cierre
 
-- Actualiza la receta con los IDs nuevos, si se recreó algo.
-- Si se recreó algo, actualiza también la receta en Zepol Cloud con `guardar_receta` y su `id`, si lo tienes.
+- Si se recreó algo, actualiza la receta en Zepol Cloud con `guardar_receta`: su `id` y la `receta` completa con los IDs nuevos.
+- Resume en una línea qué coincidió y qué se arregló.
+
+## Paso 5. Adoptar una campaña como receta
+
+Para las campañas que ya existen en Meta y no se crearon con ZEPOL. Solo lee Meta: no cambia nada en la campaña.
+
+1. Lee la campaña, sus conjuntos, sus anuncios y sus creativos como en el paso 1.
+2. Identifica el producto por el enlace de destino o por el nombre. Si no está en el perfil, pide sus datos y guárdalo con `guardar_producto`, como en el paso 1 de `/zepol-ads:nueva-campana`.
+3. Canal: `destination_type` de WhatsApp o mensajes → `whatsapp`; sitio web → `shopify`. Si no está claro, pregunta.
+4. Guarda la receta con `guardar_receta`, con el formato que trae la herramienta:
+   - `origen = adoptada`;
+   - el `estado` según Meta: `publicada` si la campaña está activa, `pausada` si está pausada y `borrador` si nunca se publicó;
+   - lo que está publicado tal cual, con los IDs de Meta de cada objeto.
+5. Si al leerla ves algo que no sigue `armado-seguro` (por ejemplo, el catálogo puesto o mejoras activas), dilo en una lista corta, pero no lo arregles sin un "sí" del alumno.
+6. Termina con: "Desde ahora ZEPOL sigue esta campaña. Corre /zepol-ads:optimizar cada mañana y /zepol-ads:reporte para ver tus números."

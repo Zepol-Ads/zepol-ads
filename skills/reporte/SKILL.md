@@ -1,13 +1,13 @@
 ---
 name: reporte
-description: Lee las métricas de Meta de las campañas del alumno por campaña, conjunto y anuncio, pide a Zepol Cloud la lectura de esos números (evaluar_conjuntos) y calcula el costo por pedido entregado con la tasa de entrega del perfil. Solo lee, no cambia nada en Meta. Úsala cuando el alumno escriba /zepol-ads:reporte o pregunte cómo van sus campañas.
+description: Lee las métricas de Meta de las campañas del alumno por campaña, conjunto y anuncio, pide a Zepol Cloud la lectura de esos números (evaluar_conjuntos), calcula el costo por pedido entregado (con la tasa de entrega del perfil o los pedidos de WhatsApp registrados) y guarda el reporte en Zepol Cloud. No cambia nada en Meta. Úsala cuando el alumno escriba /zepol-ads:reporte o pregunte cómo van sus campañas.
 ---
 
 # Reporte de campañas
 
 Lee los números de Meta y los traduce a lo que importa en contra entrega: cuánto cuesta cada pedido que sí se entrega.
 
-Esta skill **solo lee**. No cambia nada en Meta. Para proponer cambios está `/zepol-ads:optimizar`.
+Esta skill **no cambia nada en Meta**: solo lee los números y guarda el reporte en Zepol Cloud. Para proponer cambios está `/zepol-ads:optimizar`.
 
 ## Cómo le hablas al alumno
 
@@ -22,12 +22,14 @@ Esta skill **solo lee**. No cambia nada en Meta. Para proponer cambios está `/z
 - No califiques los números con tu propio criterio.
 - Si no ves las herramientas de Zepol Cloud (`obtener_perfil`, `evaluar_conjuntos`), muestra los números sin calificarlos y di: "ZEPOL ADS no está conectado, así que te muestro tus números sin evaluarlos. En la app de Claude, conéctalo en Configuración → Conectores; en Claude Code, escribe /mcp y autentica zepol-cloud."
 - Si una herramienta de Zepol Cloud responde que la cuenta no tiene una licencia activa, muestra ese mensaje tal cual y detente.
+- Si un paso falla por un error de Meta o de Zepol Cloud, explícaselo al alumno y regístralo con `registrar_error` (`comando = reporte`, el paso, el código si lo hay y un mensaje corto). Nunca envíes claves, tokens, correos ni datos de clientes.
 
 ## Paso 0. Antes de empezar
 
 1. Llama `obtener_perfil`. Si no hay perfiles, pide correr `/zepol-ads:configurar`. Si hay varios, pregunta con qué negocio trabajas.
 2. Del perfil usa `meta_cuenta_publicitaria_id` y `tasa_entrega_pct`.
 3. Si el alumno no dijo qué campaña ni qué periodo revisar, pregunta. Por defecto: las campañas activas, desde su inicio hasta ayer, en la zona horaria de la cuenta.
+4. Busca la receta de cada campaña con `listar_recetas` (por su `meta_campaign_id`). Si una campaña no tiene receta, el reporte se guarda igual, sin `receta_id`.
 
 ## Paso 1. Leer las métricas
 
@@ -54,8 +56,9 @@ Esta skill **solo lee**. No cambia nada en Meta. Para proponer cambios está `/z
   - La tasa de entrega es `tasa_entrega_pct` del perfil, como fracción (55 % → 0.55).
   - Ejemplo: S/300 de gasto, 20 compras y 55 % de entrega → S/300 ÷ (20 × 0.55) = S/27.27 por pedido entregado.
 - **WhatsApp**: Meta mide conversaciones, no pedidos.
-  - Pregunta: "¿Cuántos pedidos entregados y pagados tuviste de esta campaña en estas fechas? Si no lo sabes, uso la estimación de ZEPOL."
-  - Si responde, costo por pedido entregado = gasto ÷ pedidos entregados.
+  - Primero busca los pedidos registrados con `obtener_pedidos_whatsapp` (el `perfil_id`, el periodo y el `receta_id` o el `producto_id` de la campaña). Si hay registros, usa sus entregados y dilo: "Uso los pedidos que registraste."
+  - Si no hay registros, pregunta: "¿Cuántos pedidos entregados y pagados tuviste de esta campaña en estas fechas? Si no lo sabes, uso la estimación de ZEPOL."
+  - Con los pedidos entregados, costo por pedido entregado = gasto ÷ pedidos entregados.
   - Si no, usa el `costo_por_pedido_estimado` de `evaluar_conjuntos` y divídelo entre la tasa de entrega. Dilo claro: "Es una estimación".
 - Si el perfil no tiene tasa de entrega: "No tengo tu tasa de entrega, así que no puedo calcular el costo por pedido entregado. Corre /zepol-ads:configurar para agregarla." y muestra el resto del reporte.
 
@@ -65,4 +68,15 @@ Esta skill **solo lee**. No cambia nada en Meta. Para proponer cambios está `/z
 2. Tabla por conjunto: gasto, resultados, costo por resultado, ROAS si aplica, costo por pedido entregado y la lectura de ZEPOL en palabras simples.
 3. Tabla por anuncio: gasto, resultados, costo por resultado y CTR. Marca los anuncios que más y menos rinden.
 4. Si la tendencia o las alertas de Meta explican algo, dilo en una o dos líneas.
-5. Si hay algo para cambiar, termina con: "Si quieres que proponga cambios, corre /zepol-ads:optimizar."
+
+## Paso 5. Guardar el reporte
+
+Guarda un reporte por campaña con `guardar_reporte`, con el formato que trae la herramienta:
+
+- `origen = reporte`, el `perfil_id`, el `receta_id` si la campaña tiene receta y el periodo (`fecha_desde`, `fecha_hasta`);
+- los totales de la campaña: gasto, resultados, costo por resultado, ROAS si aplica y costo por pedido entregado;
+- en `metricas`: la campaña con su ID de Meta, el canal, la tabla por conjunto (con la lectura de ZEPOL), la tabla por anuncio, los pedidos entregados con su fuente (`registro`, `alumno` o `estimacion`), la tasa de entrega usada y lo que explicaron la tendencia y las alertas de Meta.
+
+Si la herramienta rechaza un dato, corrígelo y vuelve a enviarlo. Confirma en una línea: "Guardé este reporte en ZEPOL."
+
+Si hay algo para cambiar, termina con: "Si quieres que proponga cambios, corre /zepol-ads:optimizar."

@@ -23,6 +23,7 @@ Esta skill **solo lee**. No crea, edita ni publica nada en Meta.
 - No improvises criterios propios.
 - Si no ves las herramientas de Zepol Cloud (por ejemplo `obtener_perfil`), ZEPOL no está conectado. Di: "ZEPOL ADS no está conectado. En la app de Claude, entra a Configuración → Conectores y conecta ZEPOL ADS. En Claude Code, escribe /mcp y autentica zepol-cloud. Después vuelve a correr /zepol-ads:diagnostico." y detente.
 - Si una herramienta de Zepol Cloud responde que la cuenta no tiene una licencia activa, muestra ese mensaje tal cual y detente.
+- Si un paso falla por un error de Meta o de Zepol Cloud, explícaselo al alumno y regístralo con `registrar_error` (`comando = diagnostico`, el paso, el código si lo hay y un mensaje corto). Nunca envíes claves, tokens, correos ni datos de clientes.
 
 ## Antes de empezar
 
@@ -56,6 +57,7 @@ Esta skill **solo lee**. No crea, edita ni publica nada en Meta.
 
 - Pregunta qué producto quiere anunciar.
 - Con lo leído y esas reglas, explícale al alumno con sus números si el producto ya tiene ganadores para reutilizar o si es un producto nuevo.
+- Si el producto ya está en el perfil (`obtener_perfil` trae los productos), usa su `id` como `producto_id` en el diagnóstico.
 
 ## Paso 5. Resultado
 
@@ -63,5 +65,10 @@ Esta skill **solo lee**. No crea, edita ni publica nada en Meta.
    - accesos: qué está bien y qué falta, cada cosa con su arreglo;
    - productos encontrados en el historial;
    - ganadores con su ID de publicación.
-2. Guarda el diagnóstico en Zepol Cloud con `guardar_perfil`: envía `nombre_negocio`, `tipo_negocio` y `experiencia` tal como están en el perfil, y en `diagnostico` un resumen con la fecha de lectura, los accesos, los productos y los ganadores con su ID de publicación. El resto del perfil se conserva.
+2. Guarda el diagnóstico en Zepol Cloud con `guardar_diagnostico`, con el `perfil_id` del perfil. La herramienta trae el formato:
+   - `fecha_lectura` y la `cuenta` (ID solo con números, estado, método de pago y zona horaria);
+   - `accesos`: uno por activo, con su estado y, si falta algo, cómo arreglarlo;
+   - `productos` encontrados en el historial, con los IDs de sus campañas;
+   - `ganadores` con el ID del anuncio y el de su publicación (`object_story_id`).
+   - Reemplaza el diagnóstico anterior. Si la herramienta rechaza un dato, corrígelo y vuelve a enviarlo.
 3. Termina con el siguiente paso: "Siguiente paso: corre /zepol-ads:nueva-campana para armar la campaña de tu producto."

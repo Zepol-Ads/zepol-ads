@@ -53,7 +53,7 @@ Esta skill arma el perfil del negocio una sola vez. Las demás skills de ZEPOL l
 
 ## Paso 2. Entrevista
 
-Haz los bloques en este orden. Cada pregunta indica el dato que se guarda en Zepol Cloud (parámetro de `guardar_perfil`). Las preguntas marcadas "solo para el resumen" no tienen campo en el servidor: muéstralas en el resumen, pero no las envíes.
+Haz los bloques en este orden. Cada pregunta indica el dato que se guarda en Zepol Cloud (parámetro de `guardar_perfil`). Los datos marcados `extras.…` van dentro del parámetro `extras` (por ejemplo `extras.envios`).
 
 ### Bloque 1. Tu negocio
 
@@ -65,7 +65,7 @@ Haz los bloques en este orden. Cada pregunta indica el dato que se guarda en Zep
 3. "¿Cuánta experiencia tienes vendiendo por internet?" → `experiencia`
    - "Recién empiezo" → `principiante`
    - "Ya tengo experiencia" → `con_experiencia`
-4. "¿A dónde haces envíos?" En sus palabras ("Todo el Perú", "Solo Lima y Callao"). Solo para el resumen.
+4. "¿A dónde haces envíos?" En sus palabras ("Todo el Perú", "Solo Lima y Callao") → `extras.envios`.
 5. ZEPOL funciona solo para Perú. Si el alumno vende en otro país, dile: "Por ahora ZEPOL solo funciona para campañas en Perú." y sigue con Perú.
 
 ### Bloque 2. WhatsApp
@@ -76,9 +76,9 @@ Si `tipo_negocio` es `shopify`, no hagas este bloque.
    - "Un bot" → `bot`
    - "A mano" → `manual`
    - "Las dos cosas" → `bot`
-2. "¿Cuántas personas atienden los chats?" Solo para el resumen.
+2. "¿Cuántas personas atienden los chats?" → `extras.personas_atencion` (número entero).
 3. "¿Sientes que te falta personal para atender todos los chats?" → `whatsapp_poco_personal` ("Sí" → `true`, "No" → `false`).
-4. "¿Con qué atiendes WhatsApp?" Solo para el resumen.
+4. "¿Con qué atiendes WhatsApp?" → `extras.herramienta_whatsapp`, en palabras simples.
    - "La app WhatsApp Business"
    - "Otra herramienta (un CRM o la API)": pregunta cuál.
    - "WhatsApp normal": agrega a pendientes "Pasar el número a WhatsApp Business".
@@ -97,7 +97,7 @@ Si `tipo_negocio` es `shopify`, no hagas este bloque.
 Introduce el bloque así: "Ahora unos datos que ZEPOL puede usar en tus anuncios. Usa solo datos reales que puedas demostrar."
 
 1. "¿A cuántos clientes has atendido, más o menos?" → `prueba_social_clientes` (número entero; "No sé" → no lo envíes).
-2. "¿Tienes una calificación pública? Dime cuánto, de cuánto y dónde, por ejemplo 4.8 de 5 en Google." → `prueba_social_calificacion`, en escala de 0 a 5. Si su escala es otra, conviértela (por ejemplo 9 de 10 → 4.5) y confírmalo. Dónde la tiene es solo para el resumen.
+2. "¿Tienes una calificación pública? Dime cuánto, de cuánto y dónde, por ejemplo 4.8 de 5 en Google." → `prueba_social_calificacion`, en escala de 0 a 5. Si su escala es otra, conviértela (por ejemplo 9 de 10 → 4.5) y confírmalo. Dónde la tiene → `extras.calificacion_fuente`.
 3. Si tiene calificación: "¿Cuántas reseñas tiene esa calificación?" → `prueba_social_resenas` (número entero; "No sé" → no lo envíes).
 4. "¿Alguien reconocido recomienda tu producto o tu tienda? Por ejemplo, un especialista o un medio." → `prueba_social_recomendaciones` (lista de textos cortos en sus palabras).
 5. Si dio al menos un dato: "¿Confirmas que estos datos son reales y puedes demostrarlos?"
@@ -125,7 +125,7 @@ En los dos casos, todos los IDs se envían solo con números: quita `act_` y cua
    - Ofrece solo las cuentas con `is_ads_mcp_enabled = true`. Si alguna tiene `is_queryable = false`, `has_payment_method = false` o un `account_status` distinto de `ACTIVE`, dilo junto a su nombre, por ejemplo: "Cuenta 2 no tiene método de pago. Agrégalo en la configuración de pagos del Administrador de anuncios para poder usarla."
    - Si solo hay una, confírmala. Si hay varias, pregunta: "¿Con qué cuenta publicitaria vas a anunciar?"
    - A mano: "Abre el Administrador de anuncios: el número que aparece después de act= en la dirección es el ID de tu cuenta."
-2. **Zona horaria** (solo para el resumen; ZEPOL trabaja en hora de Lima).
+2. **Zona horaria** → `extras.zona_horaria_cuenta` (ZEPOL trabaja en hora de Lima).
    - Con el conector, verifica el campo `timezone_name` con `ads_get_field_context` y léelo con `ads_get_ad_entities` en `level = ad_account` para la cuenta elegida.
    - Si no es `America/Lima`, avisa: "Tu cuenta publicitaria no está en hora de Lima. Los horarios de lanzamiento se calculan en la hora de tu cuenta."
 3. **Página** → `meta_pagina_id`.
@@ -145,7 +145,7 @@ En los dos casos, todos los IDs se envían solo con números: quita `act_` y cua
    - El conector no lee el número de la página, así que lo escribe el alumno.
    - Quita espacios, guiones y el prefijo. Debe quedar `+51` seguido de 9 dígitos que empiezan con 9, por ejemplo `+51987654321`.
    - Si no cumple: "Ese número no parece un celular de Perú. Escríbelo con sus 9 dígitos, por ejemplo 987 654 321."
-   - Pregunta: "¿Ese número ya está vinculado a tu página de Facebook?" Solo para el resumen. Si no es "Sí", agrega a pendientes: "Vincular el número de WhatsApp Business a la página". Los anuncios a WhatsApp no se pueden activar sin ese vínculo.
+   - Pregunta: "¿Ese número ya está vinculado a tu página de Facebook?" → `extras.whatsapp_vinculado` ("Sí" → `true`, "No" o "No sé" → `false`). Si no es "Sí", agrega a pendientes: "Vincular el número de WhatsApp Business a la página". Los anuncios a WhatsApp no se pueden activar sin ese vínculo.
 
 ## Paso 3. Resumen y confirmación
 
@@ -169,9 +169,9 @@ En los dos casos, todos los IDs se envían solo con números: quita `act_` y cua
 
 ## Paso 4. Guardar el perfil en Zepol Cloud
 
-1. Llama `guardar_perfil` con `nombre_negocio`, `tipo_negocio`, `experiencia` y los demás datos que tengas. No envíes los datos que el alumno no sabe ni los que son solo para el resumen.
-2. El perfil se identifica por `nombre_negocio`: si ya existía con ese nombre, se actualiza y lo que no envíes se conserva.
-3. Si `guardar_perfil` responde con un error, muéstralo con qué pasó + cómo arreglarlo y ofrece corregir el dato. No reintentes en bucle.
+1. Llama `guardar_perfil` con `nombre_negocio`, `tipo_negocio`, `experiencia` y los demás datos que tengas, y en `extras` los datos marcados así y la lista de pendientes (`extras.pendientes`). No envíes los datos que el alumno no sabe.
+2. El perfil se identifica por `nombre_negocio`: si ya existía con ese nombre, se actualiza y lo que no envíes se conserva. Los `extras` se combinan con los que ya estaban guardados.
+3. Si `guardar_perfil` responde con un error, muéstralo con qué pasó + cómo arreglarlo y ofrece corregir el dato. No reintentes en bucle. Si el error no es de un dato del alumno, regístralo con `registrar_error` (`comando = configurar`, sin claves, tokens ni datos de clientes).
 4. Confirma que quedó guardado con lo que devuelve la herramienta (el perfil con su `id`).
 
 ## Paso 5. Cierre

@@ -18,12 +18,13 @@ El conector de Meta no puede borrar borradores. Esta skill marca lo que sobra pa
 
 1. Llama `obtener_perfil`. Si no hay perfiles, pide correr `/zepol-ads:configurar`. Si ZEPOL no está conectado o no hay licencia activa, explícalo como en `/zepol-ads:configurar` y detente.
 2. Carga la skill `armado-seguro`. Aquí aplican sobre todo sus reglas 1 (candado del editor) y 9 (limpieza).
+3. Si un paso falla por un error de Meta o de Zepol Cloud, explícaselo al alumno y regístralo con `registrar_error` (`comando = limpiar`, el paso, el código si lo hay y un mensaje corto). Nunca envíes claves, tokens, correos ni datos de clientes.
 
 ## Paso 1. Encontrar lo que sobra
 
 1. Lee los borradores con `ads_get_ad_entities` y `object_state=draft`.
-2. Cruza con las recetas guardadas. Por ahora se leen de la copia en `zepol/recetas/`; Zepol Cloud podrá leerlas en la próxima versión.
-3. Son candidatos a limpiar los objetos que no están en ninguna receta vigente o que quedaron dañados (por ejemplo, anuncios sin creativo o conjuntos sin píxel).
+2. Cruza con las recetas guardadas en Zepol Cloud: `listar_recetas` con los estados `borrador`, `publicada` y `pausada` e `incluir_ids_meta = true` trae los IDs de Meta de cada receta vigente.
+3. Son candidatos a limpiar los objetos que no están en ninguna receta vigente o que quedaron dañados (por ejemplo, anuncios sin creativo o conjuntos sin píxel). Para revisar si un objeto está dañado, compáralo con su receta completa (`obtener_receta`).
 4. La lista del conector puede estar desactualizada: confirma cada candidato con su vista previa (`ads_get_ad_preview`). Si responde "no encontrado", ya no existe y no va en la lista.
 5. Muestra la lista con nombre, ID, tipo y motivo. Pregunta: "¿Marco estos borradores con BORRAR -?" con las opciones "Marcar borradores" y "No marcar nada".
 
@@ -45,14 +46,15 @@ Da la lista exacta y estos pasos:
 
 ## Paso 4. Reconstruir desde la receta (si hace falta)
 
-- Si una campaña quedó dañada (por ejemplo, porque el editor del Administrador guardó encima), no parches: reconstrúyela desde cero con su receta.
+- Si una campaña quedó dañada (por ejemplo, porque el editor del Administrador guardó encima), no parches: reconstrúyela desde cero con su receta (`obtener_receta`).
 - Antes, confirma qué objetos existen todavía, para no duplicar nada.
 - Muestra qué se va a crear y pregunta: "¿Reconstruyo la campaña {nombre} desde su receta?" con las opciones "Reconstruir campaña" y "Todavía no".
 - Con un "sí", créala como borrador siguiendo `armado-seguro` en su orden completo: validación, revisión antes de publicar y publicación solo con otro "sí" explícito.
 - Marca la versión dañada con "BORRAR -" (pasos 2 y 3).
-- Guarda la campaña reconstruida como receta nueva con `guardar_receta`.
+- Guarda la campaña reconstruida como receta nueva con `guardar_receta`: `origen = reconstruida`, `reconstruida_de` con el `id` de la receta anterior y los IDs nuevos de Meta.
+- Pasa la receta anterior a `estado = archivada` con `guardar_receta` y su `id`.
 
 ## Paso 5. Cierre
 
 - Resume qué quedó marcado, qué ya se descartó y qué se reconstruyó.
-- Actualiza la receta con los IDs nuevos.
+- Confirma que la receta nueva quedó guardada con los IDs nuevos.

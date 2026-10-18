@@ -7,6 +7,8 @@ description: Arma una campaña nueva de Meta para un producto con ZEPOL ADS, a W
 
 Arma la campaña de un producto. Todo se crea como borrador y nada se publica ni gasta sin el "sí" explícito del alumno.
 
+El recorrido completo: metodología de Zepol Cloud por etapa → `guardar_producto` → `generar_imagen` → borrador en Meta → `guardar_receta` (primero como borrador y, al publicar, como publicada, con los IDs de Meta).
+
 ## Cómo le hablas al alumno
 
 - Español neutro de LATAM, tuteando. Sin voseo, sin "usted" y sin emojis.
@@ -22,6 +24,7 @@ Arma la campaña de un producto. Todo se crea como borrador y nada se publica ni
 - No improvises: no inventes estructuras, presupuestos, públicos, textos ni horarios con tu propio criterio. Si a las reglas les falta algo para tu caso, pregúntale al alumno.
 - Si no ves las herramientas de Zepol Cloud (por ejemplo `obtener_perfil`), ZEPOL no está conectado. Di: "ZEPOL ADS no está conectado. En la app de Claude, entra a Configuración → Conectores y conecta ZEPOL ADS. En Claude Code, escribe /mcp y autentica zepol-cloud. Después vuelve a correr /zepol-ads:nueva-campana." y detente.
 - Si una herramienta de Zepol Cloud responde que la cuenta no tiene una licencia activa, muestra ese mensaje tal cual y detente.
+- Si un paso falla por un error de Meta o de Zepol Cloud, explícaselo al alumno y regístralo con `registrar_error` (`comando = nueva-campana`, el paso, el código si lo hay y un mensaje corto). Nunca envíes claves, tokens, correos ni datos de clientes.
 
 ## Paso 0. Antes de empezar
 
@@ -40,12 +43,14 @@ Pide los datos que guarda `guardar_producto`. Si el producto ya está en el perf
 | `precio_venta` | "¿A cuánto lo vendes? Aunque no lo muestres en el anuncio, lo necesito para medir si la campaña es rentable." |
 | `margen_bajo` | "¿Dirías que el margen de este producto es bajo?" |
 | `creativos_disponibles` | "¿Qué creativos tienes de este producto: videos, imágenes, los dos o ninguno?" (`videos`, `imagenes`, `ambos` o `ninguno`). Luego pide cada uno: archivo, URL o ID de la publicación. |
-| Fotos del producto | "¿Tienes fotos reales del producto? Pásame el enlace público de una o varias." Por ahora no se guardan en Zepol Cloud: úsalas al generar las imágenes. |
+| `fotos_urls` | "¿Tienes fotos reales del producto? Pásame el enlace público (https) de una o varias, por ejemplo el de la foto en tu tienda." La primera es la que usa `generar_imagen`. |
 | `es_complejo` y `para_personas_mayores` | "¿El producto es difícil de explicar? ¿Es para personas mayores?" |
 | `landing_url` | Solo si la campaña va a Shopify: "¿Cuál es el enlace del producto en tu tienda?" Debe empezar con https://. |
+| `extras` | "Cuéntame del producto: qué problema resuelve, para quién es, sus beneficios, las dudas que más te preguntan, la garantía y sus variantes." Guarda solo lo que el alumno diga, en `extras` (`problema`, `publico`, `beneficios`, `objeciones`, `garantia`, `variantes`). |
 
 - No calcules el margen: cada negocio conoce sus números.
-- Guarda el producto con `guardar_producto`, con el `perfil_id` del perfil. Si ya existía, envía su `id` para actualizarlo.
+- No inventes datos del producto. Si el alumno no sabe algo, no lo envíes.
+- Guarda el producto con `guardar_producto`, con el `perfil_id` del perfil. Si ya existía, envía su `id` para actualizarlo: lo que no envíes se conserva y los `extras` se combinan con los guardados. `fotos_urls` reemplaza la lista completa.
 
 ## Paso 2. Canal: WhatsApp o Shopify
 
@@ -81,8 +86,10 @@ Pide los datos que guarda `guardar_producto`. Si el producto ya está en el perf
 ## Paso 5. Creativos
 
 - **Ganadores que se reutilizan**: van por su publicación (`object_story_id` + `url_tags`), con la regla 5 de `armado-seguro`. Cuáles se reutilizan sale de la metodología (`creativos`) y del diagnóstico.
-- **Imágenes nuevas**: genéralas con `generar_imagen` (`producto_id`, `temperatura`, `angulo`, los textos y la foto real del producto en `foto_producto_url`). Usa la clave de OpenAI que el alumno guardó en su panel. Zepol Cloud aloja cada imagen y devuelve una URL pública: súbela a la cuenta con `ads_creative_upload_media`.
+- **Imágenes nuevas**: genéralas con `generar_imagen` (`producto_id`, `temperatura`, `angulo` y los textos). Usa la primera foto guardada del producto; pasa `foto_producto_url` solo si el alumno quiere otra foto. Usa la clave de OpenAI que el alumno guardó en su panel. Zepol Cloud aloja cada imagen y devuelve una URL pública: súbela a la cuenta con `ads_creative_upload_media`.
+  - Si `generar_imagen` dice que falta la foto, vuelve al paso 1 y pide el enlace de una foto real del producto.
   - Si `generar_imagen` dice que falta la clave de OpenAI, pide guardarla en "Mi cuenta" del panel de ZEPOL ADS. No la pidas en el chat.
+  - Guarda el `id` de cada creativo que devuelve: va en la receta (`creativo.creativo_id`).
 - **Videos o imágenes del alumno**: necesitan una URL pública para subirse. Por ahora pídele al alumno un enlace público propio (por ejemplo, de su tienda). No uses alojamientos temporales públicos.
 - **Textos**: escríbelos con la metodología (`textos`), que trae las estructuras y los bancos de frases. Muéstralos al alumno; si pide cambios, ajústalos respetando esas reglas.
 
@@ -109,10 +116,15 @@ Usa `hide_ui: true` cuando crees muchos objetos seguidos. Si una llamada falla, 
 
 ## Paso 8. Guardar la receta
 
-- Apenas se cree, guarda la receta en Zepol Cloud con `guardar_receta`: `perfil_id`, `producto_id`, `canal`, `nombre_campana`, `estado = borrador`, `meta_campaign_id` y en `receta` la especificación completa con los IDs de cada objeto.
-- Al publicar, actualízala con su `id`, `estado = publicada`.
-- La receta sirve para verificar lo publicado, reconstruir si algo se daña y relanzar la misma estructura con otro producto.
-- Mientras Zepol Cloud no pueda leer recetas (llega en la próxima versión), guarda también una copia en `zepol/recetas/{slug-de-la-campana}.json` si puedes escribir archivos. La usan /zepol-ads:verificar y /zepol-ads:limpiar.
+- Apenas se cree el borrador, guarda la receta en Zepol Cloud con `guardar_receta`: `perfil_id`, `producto_id`, `canal`, `nombre_campana`, `estado = borrador` y en `receta` la especificación completa, con el formato que trae la herramienta:
+  - `origen = nueva_campana` y la zona horaria de la cuenta;
+  - la campaña, cada conjunto y cada anuncio con su ID de Meta (`meta_id`, solo números);
+  - por conjunto: presupuesto por día, inicio, optimización, píxel y evento (Shopify), destino, público y ubicaciones tal como se enviaron a Meta;
+  - por anuncio: tipo, creativo (`creativo_id` de `generar_imagen`, `image_hash`, `video_id` u `object_story_id`), textos, botón, enlace y UTM.
+- Guarda el `id` de la receta que devuelve.
+- Al publicar, actualízala con su `id` y `estado = publicada`.
+- La receta sirve para verificar lo publicado (/zepol-ads:verificar), limpiar y reconstruir si algo se daña (/zepol-ads:limpiar) y relanzar la misma estructura con otro producto.
+- Si la herramienta rechaza un dato, corrígelo y vuelve a enviarla. No sigas al paso 9 sin la receta guardada.
 
 ## Paso 9. Validar el borrador
 
@@ -143,5 +155,5 @@ Regla 10 de `armado-seguro`. Pregunta: "¿Publico la campaña {nombre}? Empezar�
 
 1. Haz la verificación después de publicar (regla 11 de `armado-seguro`, o `/zepol-ads:verificar`).
 2. Confirma en una línea qué quedó publicado y desde cuándo.
-3. En WhatsApp, recuerda: "Cada día dime cuántos pedidos confirmados, entregados y devueltos tuviste, y los registro para calcular tu costo por pedido entregado." Regístralos con `registrar_pedidos_whatsapp`.
+3. En WhatsApp, recuerda: "Cada día dime cuántos pedidos confirmados, entregados y devueltos tuviste, y los registro para calcular tu costo por pedido entregado." Regístralos con `registrar_pedidos_whatsapp`, con el `receta_id` de esta campaña.
 4. Termina con: "Desde mañana, corre /zepol-ads:optimizar cada mañana. Para ver tus números, usa /zepol-ads:reporte."
