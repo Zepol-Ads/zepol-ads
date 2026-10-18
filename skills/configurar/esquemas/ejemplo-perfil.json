@@ -1,0 +1,63 @@
+{
+  "version_esquema": 1,
+  "creado": "2026-10-17T21:30:00-05:00",
+  "actualizado": "2026-10-17T21:30:00-05:00",
+  "negocio": {
+    "nombre": "Tienda Ejemplo",
+    "pais": "PE",
+    "tipo": "hibrido",
+    "experiencia": "con_experiencia",
+    "cobertura_envios": "Todo el Perú"
+  },
+  "whatsapp": {
+    "usa_whatsapp": true,
+    "atencion": "a_mano",
+    "personas_que_atienden": 2,
+    "poco_personal": true,
+    "herramienta": "app_whatsapp_business",
+    "herramienta_nombre": null,
+    "etiqueta_chats_de_pedido": "a_veces"
+  },
+  "anuncios": {
+    "muestra_precio": false
+  },
+  "pruebas_sociales": {
+    "clientes_aprox": 3000,
+    "calificacion": {
+      "valor": 4.8,
+      "escala": 5,
+      "fuente": "Google"
+    },
+    "recomendaciones": [],
+    "confirmado_como_real": true
+  },
+  "entregas": {
+    "tasa_entrega_pct": 55,
+    "app_formulario": "releasit",
+    "app_formulario_nombre": null
+  },
+  "meta": {
+    "origen": "conector",
+    "portafolio_id": "100000000000001",
+    "portafolio_nombre": "Tienda Ejemplo SAC",
+    "cuenta_publicitaria_id": "100000000000002",
+    "cuenta_publicitaria_nombre": "Tienda Ejemplo - Cuenta 1",
+    "zona_horaria": "America/Lima",
+    "pagina_id": "100000000000003",
+    "pagina_nombre": "Tienda Ejemplo",
+    "instagram_id": "100000000000004",
+    "instagram_usuario": "tiendaejemplo",
+    "pixel_id": "100000000000005",
+    "pixel_nombre": "Pixel Tienda Ejemplo",
+    "whatsapp_numero": "+51987654321",
+    "whatsapp_vinculado": true
+  },
+  "reglas_fijas": {
+    "catalogo": "apagado",
+    "mejoras_automaticas": "apagadas",
+    "aprobacion_antes_de_publicar": true
+  },
+  "pendientes": [
+    "Etiquetar todos los chats de pedido en WhatsApp Business"
+  ]
+}

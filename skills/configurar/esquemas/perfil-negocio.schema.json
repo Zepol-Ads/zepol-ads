@@ -1,0 +1,280 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://zepol-ads/esquemas/perfil-negocio/v1",
+  "title": "Perfil del negocio de ZEPOL ADS",
+  "description": "Se crea una vez con /zepol-ads:configurar y se aplica en cada campaña sin volver a preguntar. Por ahora se guarda en zepol/perfil-negocio.json dentro de la carpeta de trabajo. TODO(servidor): guardarlo en Zepol Cloud (Supabase) y dejar el archivo local solo como respaldo.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version_esquema",
+    "creado",
+    "actualizado",
+    "negocio",
+    "whatsapp",
+    "anuncios",
+    "pruebas_sociales",
+    "entregas",
+    "meta",
+    "reglas_fijas",
+    "pendientes"
+  ],
+  "properties": {
+    "version_esquema": {
+      "const": 1
+    },
+    "creado": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 con desfase de Lima, por ejemplo 2026-10-17T21:30:00-05:00."
+    },
+    "actualizado": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "negocio": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nombre", "pais", "tipo", "experiencia", "cobertura_envios"],
+      "properties": {
+        "nombre": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pais": {
+          "const": "PE",
+          "description": "Por ahora ZEPOL solo funciona en Perú."
+        },
+        "tipo": {
+          "enum": ["solo_shopify", "solo_whatsapp", "hibrido"],
+          "description": "Por dónde vende el negocio."
+        },
+        "experiencia": {
+          "enum": ["principiante", "con_experiencia"],
+          "description": "Experiencia en ecommerce."
+        },
+        "cobertura_envios": {
+          "type": ["string", "null"],
+          "description": "A dónde envía, en palabras del alumno. Por ejemplo: Todo el Perú, o Solo Lima y Callao."
+        }
+      }
+    },
+    "whatsapp": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Atención por WhatsApp. Si el negocio es solo_shopify, usa_whatsapp es false y el resto queda en null.",
+      "required": [
+        "usa_whatsapp",
+        "atencion",
+        "personas_que_atienden",
+        "poco_personal",
+        "herramienta",
+        "herramienta_nombre",
+        "etiqueta_chats_de_pedido"
+      ],
+      "properties": {
+        "usa_whatsapp": {
+          "type": "boolean"
+        },
+        "atencion": {
+          "enum": ["bot", "a_mano", "bot_y_a_mano", null],
+          "description": "Quién responde los chats."
+        },
+        "personas_que_atienden": {
+          "type": ["integer", "null"],
+          "minimum": 0
+        },
+        "poco_personal": {
+          "type": ["boolean", "null"],
+          "description": "Si el alumno siente que le falta personal para atender todos los chats."
+        },
+        "herramienta": {
+          "enum": ["app_whatsapp_business", "otra_herramienta", "whatsapp_personal", null],
+          "description": "Con qué atiende: la app WhatsApp Business, otra herramienta (CRM o API) o WhatsApp normal."
+        },
+        "herramienta_nombre": {
+          "type": ["string", "null"],
+          "description": "Nombre de la otra herramienta, si aplica."
+        },
+        "etiqueta_chats_de_pedido": {
+          "enum": ["si", "a_veces", "no", null],
+          "description": "Si marca los chats con las etiquetas de pedido de WhatsApp Business. Solo aplica con la app WhatsApp Business."
+        }
+      }
+    },
+    "anuncios": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["muestra_precio"],
+      "properties": {
+        "muestra_precio": {
+          "type": "boolean",
+          "description": "Decisión del negocio: si sus anuncios muestran el precio."
+        }
+      }
+    },
+    "pruebas_sociales": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Solo datos reales que el negocio pueda demostrar. Si confirmado_como_real es false, ZEPOL no los usa.",
+      "required": ["clientes_aprox", "calificacion", "recomendaciones", "confirmado_como_real"],
+      "properties": {
+        "clientes_aprox": {
+          "type": ["integer", "null"],
+          "minimum": 0,
+          "description": "Número aproximado de clientes atendidos."
+        },
+        "calificacion": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "required": ["valor", "escala", "fuente"],
+          "properties": {
+            "valor": {
+              "type": "number",
+              "minimum": 0
+            },
+            "escala": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "description": "Normalmente 5."
+            },
+            "fuente": {
+              "type": "string",
+              "description": "Dónde está publicada: Google, Facebook, la tienda, etc."
+            }
+          }
+        },
+        "recomendaciones": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Quién recomienda el producto o la tienda, en palabras del alumno."
+        },
+        "confirmado_como_real": {
+          "type": "boolean"
+        }
+      }
+    },
+    "entregas": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tasa_entrega_pct", "app_formulario", "app_formulario_nombre"],
+      "properties": {
+        "tasa_entrega_pct": {
+          "type": ["number", "null"],
+          "minimum": 0,
+          "maximum": 100,
+          "description": "De cada 100 pedidos contra entrega, cuántos se entregan y se pagan. Sirve para calcular el costo por pedido entregado."
+        },
+        "app_formulario": {
+          "enum": ["releasit", "otra", "ninguna", null],
+          "description": "App del formulario contra entrega en la tienda. null si el negocio es solo_whatsapp."
+        },
+        "app_formulario_nombre": {
+          "type": ["string", "null"],
+          "description": "Nombre de la app si app_formulario es otra."
+        }
+      }
+    },
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "origen",
+        "portafolio_id",
+        "portafolio_nombre",
+        "cuenta_publicitaria_id",
+        "cuenta_publicitaria_nombre",
+        "zona_horaria",
+        "pagina_id",
+        "pagina_nombre",
+        "instagram_id",
+        "instagram_usuario",
+        "pixel_id",
+        "pixel_nombre",
+        "whatsapp_numero",
+        "whatsapp_vinculado"
+      ],
+      "properties": {
+        "origen": {
+          "enum": ["conector", "manual"],
+          "description": "Si los activos se leyeron con el conector de Meta o los escribió el alumno."
+        },
+        "portafolio_id": {
+          "type": ["string", "null"],
+          "pattern": "^[0-9]+$"
+        },
+        "portafolio_nombre": {
+          "type": ["string", "null"]
+        },
+        "cuenta_publicitaria_id": {
+          "type": "string",
+          "pattern": "^[0-9]+$",
+          "description": "Solo números, sin el prefijo act_."
+        },
+        "cuenta_publicitaria_nombre": {
+          "type": ["string", "null"]
+        },
+        "zona_horaria": {
+          "type": ["string", "null"],
+          "description": "Zona horaria de la cuenta publicitaria, por ejemplo America/Lima."
+        },
+        "pagina_id": {
+          "type": ["string", "null"],
+          "pattern": "^[0-9]+$"
+        },
+        "pagina_nombre": {
+          "type": ["string", "null"]
+        },
+        "instagram_id": {
+          "type": ["string", "null"],
+          "pattern": "^[0-9]+$"
+        },
+        "instagram_usuario": {
+          "type": ["string", "null"]
+        },
+        "pixel_id": {
+          "type": ["string", "null"],
+          "pattern": "^[0-9]+$"
+        },
+        "pixel_nombre": {
+          "type": ["string", "null"]
+        },
+        "whatsapp_numero": {
+          "type": ["string", "null"],
+          "pattern": "^\\+519[0-9]{8}$",
+          "description": "Número de WhatsApp Business vinculado a la página, en formato +519XXXXXXXX."
+        },
+        "whatsapp_vinculado": {
+          "type": ["boolean", "null"],
+          "description": "Si el alumno dice que el número ya está vinculado a la página. Lo comprueban diagnostico y nueva-campana. null si no usa WhatsApp o no sabe."
+        }
+      }
+    },
+    "reglas_fijas": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Reglas técnicas que ZEPOL aplica siempre. No se pueden cambiar desde el perfil.",
+      "required": ["catalogo", "mejoras_automaticas", "aprobacion_antes_de_publicar"],
+      "properties": {
+        "catalogo": {
+          "const": "apagado"
+        },
+        "mejoras_automaticas": {
+          "const": "apagadas"
+        },
+        "aprobacion_antes_de_publicar": {
+          "const": true
+        }
+      }
+    },
+    "pendientes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Datos que el alumno no tenía a la mano o activos que faltan, para completarlos después."
+    }
+  }
+}
