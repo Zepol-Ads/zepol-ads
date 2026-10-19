@@ -22,16 +22,17 @@ El recorrido completo: metodología de Zepol Cloud por etapa → `guardar_produc
 - La metodología de ZEPOL vive en Zepol Cloud, no en este plugin: estructura, objetivo, presupuestos, públicos, ubicaciones, nombres, horarios, configuración, creativos y textos.
 - Pídela con `obtener_metodologia`, por etapa (`estructura`, `configuracion`, `creativos`, `textos`) y con el canal de la campaña (`whatsapp` o `shopify`).
 - No improvises: no inventes estructuras, presupuestos, públicos, textos ni horarios con tu propio criterio. Si a las reglas les falta algo para tu caso, pregúntale al alumno.
-- Si no ves las herramientas de Zepol Cloud (por ejemplo `obtener_perfil`), ZEPOL no está conectado. Di: "ZEPOL ADS no está conectado. En la app de Claude, entra a Configuración → Conectores y conecta ZEPOL ADS. En Claude Code, escribe /mcp y autentica zepol-cloud. Después vuelve a correr /zepol-ads:nueva-campana." y detente.
+- Si no ves las herramientas de Zepol Cloud (por ejemplo `obtener_perfil`), ZEPOL no está conectado. Di: "ZEPOL ADS no está conectado. En la app de Claude, entra a Customize → Plugins → ZEPOL ADS, abre la pestaña Conectores y toca Conectar. En Claude Code, escribe /mcp y autentica zepol-cloud. Después vuelve a correr /zepol-ads:nueva-campana." y detente.
 - Si una herramienta de Zepol Cloud responde que la cuenta no tiene una licencia activa, muestra ese mensaje tal cual y detente.
 - Si un paso falla por un error de Meta o de Zepol Cloud, explícaselo al alumno y regístralo con `registrar_error` (`comando = nueva-campana`, el paso, el código si lo hay y un mensaje corto). Nunca envíes claves, tokens, correos ni datos de clientes.
 
 ## Paso 0. Antes de empezar
 
-1. Llama `obtener_perfil`. Si no hay perfiles: "No encuentro tu perfil de negocio. Corre /zepol-ads:configurar primero; toma unos 5 minutos." Si hay varios, pregunta con qué negocio trabajas.
-2. Confirma que el conector de Meta está disponible. Si no: "No encuentro el conector de Meta. Conéctalo desde la sección Conectores de Claude y vuelve a correr /zepol-ads:nueva-campana."
-3. Revisa si el perfil trae un `diagnostico` (lo guarda /zepol-ads:diagnostico). Si no hay, ofrece: "Antes de armar la campaña conviene estudiar tu cuenta. ¿Corro el diagnóstico primero?" con las opciones "Correr diagnóstico" y "Seguir sin diagnóstico".
-4. Carga la skill `armado-seguro`. Todo lo que se cree o edite en Meta sigue sus reglas, en su orden.
+1. Llama `estado_cuenta` con `version_plugin = "0.5.0"`. Si `onboarding.arranque_completo` es `false`, di: "Antes de armar una campaña falta tu arranque: escribe /zepol-ads:empezar. En unos minutos encuentra tus activos de Meta, estudia tu cuenta y te deja listo." y detente. Si `/zepol-ads:empezar` te trajo hasta aquí, el arranque ya está hecho.
+2. Llama `obtener_perfil`. Si hay varios perfiles, pregunta con qué negocio trabajas.
+3. Confirma que el conector de Meta está disponible. Si no: "No encuentro el conector de Meta. Conéctalo desde la sección Conectores de Claude y vuelve a correr /zepol-ads:nueva-campana."
+4. Usa el `diagnostico` del perfil (ganadores y alertas) en los pasos que lo piden.
+5. Carga la skill `armado-seguro`. Todo lo que se cree o edite en Meta sigue sus reglas, en su orden.
 
 ## Paso 1. Datos del producto
 

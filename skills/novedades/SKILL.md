@@ -16,18 +16,19 @@ Cuenta qué hay de nuevo en ZEPOL y cómo está la cuenta del alumno.
 
 ## Zepol Cloud
 
-- Si no ves las herramientas de Zepol Cloud (por ejemplo `estado_cuenta`), ZEPOL no está conectado. Di: "ZEPOL ADS no está conectado. En la app de Claude, entra a Configuración → Conectores y conecta ZEPOL ADS. En Claude Code, escribe /mcp y autentica zepol-cloud. Después vuelve a correr /zepol-ads:novedades." y detente.
+- Si no ves las herramientas de Zepol Cloud (por ejemplo `estado_cuenta`), ZEPOL no está conectado. Di: "ZEPOL ADS no está conectado. En la app de Claude, entra a Customize → Plugins → ZEPOL ADS, abre la pestaña Conectores y toca Conectar. En Claude Code, escribe /mcp y autentica zepol-cloud. Después vuelve a correr /zepol-ads:novedades." y detente.
 - Esta skill funciona aunque la cuenta no tenga una licencia activa.
 
 ## Paso 1. Estado de la cuenta
 
-1. Llama `estado_cuenta` con `version_plugin = "0.4.0"` (la versión de este plugin).
+1. Llama `estado_cuenta` con `version_plugin = "0.5.0"` (la versión de este plugin).
 2. Muestra una tabla corta con dos columnas, "Dato" y "Estado":
    - **Licencia**: activa, inactiva o sin licencia, con su tipo (beta o compra).
    - **Novedades**: hasta qué fecha las recibe, o "de por vida".
    - **Imágenes de hoy**: cuántas le quedan.
    - **Clave de OpenAI**: guardada (con su final, por ejemplo sk-…abcd) o "Falta: guárdala en Mi cuenta, en el panel de ZEPOL ADS". Nunca la pidas en el chat.
    - **Versión del plugin**: la instalada y, si `actualizar_plugin` es `true`, "Hay una versión nueva".
+   - **Arranque**: "Hecho" si `onboarding.arranque_completo` es `true`; si no, "Falta: escribe /zepol-ads:empezar".
 3. Si la licencia no está activa, muestra el aviso de la herramienta tal cual.
 4. Si las novedades vencieron (`novedades_vigentes = false`), explica: "ZEPOL sigue funcionando, pero las funciones nuevas que salgan desde ahora no entran en tu licencia. Escríbele a Alexis para renovarlas."
 
@@ -42,7 +43,7 @@ Cuenta qué hay de nuevo en ZEPOL y cómo está la cuenta del alumno.
 
 Si hay una versión nueva del plugin, explica cómo actualizarlo:
 
-- **En la app de Claude:** en Configuración → Plugins, busca zepol-ads y actualízalo.
+- **En la app de Claude:** en Customize → Plugins, busca zepol-ads y actualízalo. Si tienes encendido "Sync automatically", se actualiza solo.
 - **En Claude Code:**
 
 ```bash

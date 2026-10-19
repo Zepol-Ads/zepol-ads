@@ -16,7 +16,7 @@ Le hace llegar a Alexis lo que el alumno piensa de ZEPOL: lo que funcionó, lo q
 
 ## Zepol Cloud
 
-- Si no ves las herramientas de Zepol Cloud (por ejemplo `registrar_feedback`), ZEPOL no está conectado. Di: "ZEPOL ADS no está conectado. En la app de Claude, entra a Configuración → Conectores y conecta ZEPOL ADS. En Claude Code, escribe /mcp y autentica zepol-cloud. Después vuelve a correr /zepol-ads:feedback." y detente.
+- Si no ves las herramientas de Zepol Cloud (por ejemplo `registrar_feedback`), ZEPOL no está conectado. Di: "ZEPOL ADS no está conectado. En la app de Claude, entra a Customize → Plugins → ZEPOL ADS, abre la pestaña Conectores y toca Conectar. En Claude Code, escribe /mcp y autentica zepol-cloud. Después vuelve a correr /zepol-ads:feedback." y detente.
 - El feedback se puede enviar aunque la cuenta no tenga una licencia activa.
 
 ## Paso 1. El comentario

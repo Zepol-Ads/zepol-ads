@@ -21,13 +21,13 @@ Esta skill **solo lee**. No crea, edita ni publica nada en Meta.
 - La metodología de ZEPOL vive en Zepol Cloud, no en este plugin. Eso incluye qué es un buen resultado y cómo se reutilizan los ganadores.
 - Pídela con `obtener_metodologia`: `etapa = optimizacion` (qué es un buen resultado) y `etapa = creativos` (reutilizar ganadores), con el canal de cada producto.
 - No improvises criterios propios.
-- Si no ves las herramientas de Zepol Cloud (por ejemplo `obtener_perfil`), ZEPOL no está conectado. Di: "ZEPOL ADS no está conectado. En la app de Claude, entra a Configuración → Conectores y conecta ZEPOL ADS. En Claude Code, escribe /mcp y autentica zepol-cloud. Después vuelve a correr /zepol-ads:diagnostico." y detente.
+- Si no ves las herramientas de Zepol Cloud (por ejemplo `obtener_perfil`), ZEPOL no está conectado. Di: "ZEPOL ADS no está conectado. En la app de Claude, entra a Customize → Plugins → ZEPOL ADS, abre la pestaña Conectores y toca Conectar. En Claude Code, escribe /mcp y autentica zepol-cloud. Después vuelve a correr /zepol-ads:diagnostico." y detente.
 - Si una herramienta de Zepol Cloud responde que la cuenta no tiene una licencia activa, muestra ese mensaje tal cual y detente.
 - Si un paso falla por un error de Meta o de Zepol Cloud, explícaselo al alumno y regístralo con `registrar_error` (`comando = diagnostico`, el paso, el código si lo hay y un mensaje corto). Nunca envíes claves, tokens, correos ni datos de clientes.
 
 ## Antes de empezar
 
-1. Llama `obtener_perfil`. Si no hay perfiles: "No encuentro tu perfil de negocio. Corre /zepol-ads:configurar primero; toma unos 5 minutos." Si hay varios, pregunta con qué negocio trabajas. Usa sus activos: `meta_cuenta_publicitaria_id`, `meta_pagina_id`, `meta_instagram_id`, `meta_pixel_id`, `app_formulario` y `whatsapp_numero`.
+1. Llama `obtener_perfil`. Si no hay perfiles o el perfil no tiene cuenta publicitaria (`meta_cuenta_publicitaria_id`), di: "Antes del diagnóstico falta tu arranque: escribe /zepol-ads:empezar. Encuentra tus activos de Meta y estudia tu cuenta en el mismo paso." y detente. Si hay varios perfiles, pregunta con qué negocio trabajas. Usa sus activos: `meta_cuenta_publicitaria_id`, `meta_pagina_id`, `meta_instagram_id`, `meta_pixel_id`, `app_formulario` y `whatsapp_numero`.
 2. Confirma que el conector de Meta está disponible (por ejemplo, `ads_get_ad_accounts`). Si no: "No encuentro el conector de Meta. Conéctalo desde la sección Conectores de Claude y vuelve a correr /zepol-ads:diagnostico."
 3. Pide solo los campos que necesitas y pagina con los cursores. Las respuestas del conector son grandes y consumen el plan del alumno.
 
@@ -71,4 +71,4 @@ Esta skill **solo lee**. No crea, edita ni publica nada en Meta.
    - `productos` encontrados en el historial, con los IDs de sus campañas;
    - `ganadores` con el ID del anuncio y el de su publicación (`object_story_id`).
    - Reemplaza el diagnóstico anterior. Si la herramienta rechaza un dato, corrígelo y vuelve a enviarlo.
-3. Termina con el siguiente paso: "Siguiente paso: corre /zepol-ads:nueva-campana para armar la campaña de tu producto."
+3. Termina con el siguiente paso: "Siguiente paso: escribe /zepol-ads:nueva-campana para armar la campaña de tu producto."

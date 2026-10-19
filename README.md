@@ -6,13 +6,14 @@ Asistente para crear, publicar, medir y optimizar campañas de Meta (Facebook e 
 - Nada se publica ni gasta sin tu "sí".
 - Funciona con el conector oficial de Meta (`mcp.facebook.com/ads`) y con tu propia cuenta.
 
-Versión 0.4.0. Todos los comandos usan Zepol Cloud: el perfil, los productos, la metodología, las imágenes, las recetas, los diagnósticos y los reportes viven en el servidor. Falta la prueba en vivo de punta a punta.
+Versión 0.5.0. Empieza con un solo comando: `/zepol-ads:empezar` lee lo que llenaste en la web de ZEPOL, encuentra tus activos de Meta, estudia tu cuenta y te propone tu primera campaña. Todos los comandos usan Zepol Cloud: el perfil, los productos, la metodología, las imágenes, las recetas, los diagnósticos y los reportes viven en el servidor. Falta la prueba en vivo de punta a punta.
 
 ## Comandos
 
 | Comando | Qué hace |
 |---|---|
-| `/zepol-ads:configurar` | Entrevista corta para crear el perfil de tu negocio |
+| `/zepol-ads:empezar` | **Empieza aquí.** Arranque completo: conexiones, tu negocio, tus activos de Meta, el estudio de tu cuenta, tu plan de arranque y el borrador de tu primera campaña |
+| `/zepol-ads:configurar` | Cambia los datos de tu negocio con una entrevista corta |
 | `/zepol-ads:diagnostico` | Estudia tu cuenta (accesos, historial por producto y ganadores) y guarda el diagnóstico |
 | `/zepol-ads:nueva-campana` | Arma una campaña a WhatsApp o a Shopify como borrador, guarda su receta y la publica con tu aprobación |
 | `/zepol-ads:verificar` | Compara lo publicado contra la receta de la campaña; adopta como receta una campaña creada por tu cuenta |
@@ -38,7 +39,12 @@ Sí están aquí las reglas técnicas de seguridad del conector de Meta (`skills
 
 ## Instalación (canal beta)
 
-**En la app de Claude:** en Configuración → Plugins, agrega el marketplace `Zepol-Ads/zepol-ads` e instala **zepol-ads**.
+**En la app de Claude:**
+
+1. Entra a Customize → Plugins → Add → Add marketplace, pega `Zepol-Ads/zepol-ads` y toca Add.
+2. Instala **zepol-ads** y enciende "Sync automatically" para recibir las actualizaciones.
+3. En el plugin, abre la pestaña Conectores, toca **Conectar** en ZEPOL ADS y luego **Permitir acceso** con la cuenta de tu licencia.
+4. En Customize → Connectors, conecta **Meta Ads** con tu cuenta de Facebook.
 
 **En Claude Code:**
 
@@ -50,7 +56,7 @@ claude plugin marketplace add Zepol-Ads/zepol-ads
 claude plugin install zepol-ads@zepol-ads-beta
 ```
 
-Después, reinicia Claude y escribe `/zepol-ads:configurar`. La primera vez, Claude te pide iniciar sesión en ZEPOL ADS con la cuenta de tu licencia.
+Después, reinicia Claude y escribe `/zepol-ads:empezar`. La primera vez, Claude te pide iniciar sesión en ZEPOL ADS con la cuenta de tu licencia.
 
 Para probar sin instalar, desde una copia local: `claude --plugin-dir ./plugin`.
 
@@ -88,7 +94,9 @@ Fuera de las skills:
 
 - URL pública del repositorio, licencia y correo de contacto en `plugin.json`.
 - Segundo marketplace estable (`zepol-ads`) para la venta.
-- Al subir la versión, cámbiala en `plugin.json`, en `marketplace.json` y en `skills/novedades` (la envía a `estado_cuenta`).
+- Al subir la versión, cámbiala en `plugin.json`, en `marketplace.json` y en el `version_plugin` que las skills envían a `estado_cuenta` (`empezar`, `novedades`, `nueva-campana`, `optimizar`, `reporte`, `verificar` y `limpiar`).
+- `empezar` enlaza a la bienvenida del panel en `zepol-ad-beacon.lovable.app`: cámbialo cuando el panel pase a `zepolads.com`.
+- Probar si el conector de Meta (`https://mcp.facebook.com/ads`) puede venir dentro del plugin: pide el ID de la app de Meta, así que no está comprobado.
 - Guía de instalación para Windows y para la app de Claude.
 - Permisos: un plugin no puede traer reglas de permiso, así que la guía de instalación debe explicar qué herramientas de lectura aprobar de una vez.
 
@@ -102,6 +110,7 @@ plugin/
   mcp/
     zepol-cloud.json      servidor remoto de ZEPOL (Zepol Cloud)
   skills/
+    empezar/              arranque completo (empieza aquí)
     configurar/           entrevista del perfil del negocio
     armado-seguro/        reglas técnicas del conector de Meta
     diagnostico/

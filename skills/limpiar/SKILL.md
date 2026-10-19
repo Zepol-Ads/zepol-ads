@@ -16,9 +16,13 @@ El conector de Meta no puede borrar borradores. Esta skill marca lo que sobra pa
 
 ## Paso 0. Antes de empezar
 
-1. Llama `obtener_perfil`. Si no hay perfiles, pide correr `/zepol-ads:configurar`. Si ZEPOL no está conectado o no hay licencia activa, explícalo como en `/zepol-ads:configurar` y detente.
-2. Carga la skill `armado-seguro`. Aquí aplican sobre todo sus reglas 1 (candado del editor) y 9 (limpieza).
-3. Si un paso falla por un error de Meta o de Zepol Cloud, explícaselo al alumno y regístralo con `registrar_error` (`comando = limpiar`, el paso, el código si lo hay y un mensaje corto). Nunca envíes claves, tokens, correos ni datos de clientes.
+1. Si ZEPOL no está conectado o no hay licencia activa, explícalo como en `/zepol-ads:empezar` y detente.
+2. Llama `estado_cuenta` con `version_plugin = "0.5.0"`. Mira `onboarding.pasos`:
+   - si falta el perfil o la cuenta publicitaria (`perfil` o `activos_meta` en `false`), di: "Antes de limpiar falta tu arranque: escribe /zepol-ads:empezar. En unos minutos encuentra tus activos de Meta y estudia tu cuenta." y detente;
+   - si solo falta el diagnóstico, sigue y, al terminar, recuerda: "Te falta el arranque: escribe /zepol-ads:empezar para que estudie tu cuenta."
+3. Llama `obtener_perfil`. Si hay varios perfiles, pregunta con qué negocio trabajas.
+4. Carga la skill `armado-seguro`. Aquí aplican sobre todo sus reglas 1 (candado del editor) y 9 (limpieza).
+5. Si un paso falla por un error de Meta o de Zepol Cloud, explícaselo al alumno y regístralo con `registrar_error` (`comando = limpiar`, el paso, el código si lo hay y un mensaje corto). Nunca envíes claves, tokens, correos ni datos de clientes.
 
 ## Paso 1. Encontrar lo que sobra
 

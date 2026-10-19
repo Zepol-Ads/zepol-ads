@@ -1,6 +1,6 @@
 ---
 name: configurar
-description: Crea o actualiza el perfil del negocio de ZEPOL ADS con una entrevista corta (tipo de negocio y experiencia, atención por WhatsApp, precio en los anuncios, pruebas sociales, tasa de entrega, app del formulario y activos de Meta) y lo guarda en Zepol Cloud. Úsala cuando el alumno escriba /zepol-ads:configurar, cuando empiece a usar ZEPOL o cuando otra skill de ZEPOL no encuentre el perfil.
+description: Crea o actualiza el perfil del negocio de ZEPOL ADS con una entrevista corta (tipo de negocio y experiencia, atención por WhatsApp, precio en los anuncios, pruebas sociales, tasa de entrega, app del formulario y activos de Meta) y lo guarda en Zepol Cloud. Úsala cuando el alumno escriba /zepol-ads:configurar o quiera cambiar un dato de su negocio. Para empezar desde cero se usa /zepol-ads:empezar, que reutiliza esta entrevista.
 ---
 
 # Configurar el perfil del negocio
@@ -12,7 +12,7 @@ Esta skill arma el perfil del negocio una sola vez. Las demás skills de ZEPOL l
 
 ## Antes de empezar: conexión con Zepol Cloud
 
-- Si no ves las herramientas de Zepol Cloud (`obtener_perfil`, `guardar_perfil`), ZEPOL no está conectado. Dile al alumno: "ZEPOL ADS no está conectado. En la app de Claude, entra a Configuración → Conectores y conecta ZEPOL ADS. En Claude Code, escribe /mcp y autentica zepol-cloud. Inicia sesión con la cuenta de tu licencia y vuelve a correr /zepol-ads:configurar." No sigas sin la conexión.
+- Si no ves las herramientas de Zepol Cloud (`obtener_perfil`, `guardar_perfil`), ZEPOL no está conectado. Dile al alumno: "ZEPOL ADS no está conectado. En la app de Claude, entra a Customize → Plugins → ZEPOL ADS, abre la pestaña Conectores y toca Conectar. En Claude Code, escribe /mcp y autentica zepol-cloud. Inicia sesión con la cuenta de tu licencia y vuelve a correr /zepol-ads:configurar." No sigas sin la conexión.
 - Si una herramienta de Zepol Cloud responde que la cuenta no tiene una licencia activa, muestra ese mensaje tal cual y detente.
 
 ## Cómo le hablas al alumno
@@ -178,4 +178,4 @@ En los dos casos, todos los IDs se envían solo con números: quita `act_` y cua
 
 - Confirma en una línea: "Perfil de {nombre_negocio} guardado en ZEPOL."
 - Si hay pendientes, recuérdalos en una lista corta.
-- Termina con el siguiente paso: "Siguiente paso: corre /zepol-ads:diagnostico para que estudie tu cuenta antes de armar campañas."
+- Termina con el siguiente paso: "Si todavía no hiciste tu arranque, escribe /zepol-ads:empezar: encuentra tus activos de Meta, estudia tu cuenta y te propone tu primera campaña."

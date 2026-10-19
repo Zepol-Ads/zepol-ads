@@ -16,12 +16,16 @@ Compara lo que está publicado en Meta contra la receta de la campaña. Solo lee
 
 ## Paso 0. Antes de empezar
 
-1. Llama `obtener_perfil`. Si no hay perfiles, pide correr `/zepol-ads:configurar`. Si ZEPOL no está conectado o no hay licencia activa, explícalo como en `/zepol-ads:configurar` y detente.
-2. Si el alumno no dijo qué campaña verificar, lista sus recetas con `listar_recetas` (estados `borrador`, `publicada` y `pausada`) y pregunta cuál.
-3. Trae la receta completa con `obtener_receta`, por su `id` o por el ID de la campaña en Meta (`meta_campaign_id`).
-4. Si no hay receta de esa campaña, dilo y ofrece adoptarla: "No tengo la receta de esta campaña, así que no puedo compararla. ¿La adopto como receta para que ZEPOL la siga desde hoy?" con las opciones "Adoptar campaña" y "No por ahora". Si acepta, sigue el "Paso 5. Adoptar una campaña como receta" y termina.
-5. Carga la skill `armado-seguro`.
-6. Si un paso falla por un error de Meta o de Zepol Cloud, explícaselo al alumno y regístralo con `registrar_error` (`comando = verificar`, el paso, el código si lo hay y un mensaje corto). Nunca envíes claves, tokens, correos ni datos de clientes.
+1. Si ZEPOL no está conectado o no hay licencia activa, explícalo como en `/zepol-ads:empezar` y detente.
+2. Llama `estado_cuenta` con `version_plugin = "0.5.0"`. Mira `onboarding.pasos`:
+   - si falta el perfil o la cuenta publicitaria (`perfil` o `activos_meta` en `false`), di: "Antes de verificar falta tu arranque: escribe /zepol-ads:empezar. En unos minutos encuentra tus activos de Meta y estudia tu cuenta." y detente;
+   - si solo falta el diagnóstico, sigue y, al terminar, recuerda: "Te falta el arranque: escribe /zepol-ads:empezar para que estudie tu cuenta."
+3. Llama `obtener_perfil`. Si hay varios perfiles, pregunta con qué negocio trabajas.
+4. Si el alumno no dijo qué campaña verificar, lista sus recetas con `listar_recetas` (estados `borrador`, `publicada` y `pausada`) y pregunta cuál.
+5. Trae la receta completa con `obtener_receta`, por su `id` o por el ID de la campaña en Meta (`meta_campaign_id`).
+6. Si no hay receta de esa campaña, dilo y ofrece adoptarla: "No tengo la receta de esta campaña, así que no puedo compararla. ¿La adopto como receta para que ZEPOL la siga desde hoy?" con las opciones "Adoptar campaña" y "No por ahora". Si acepta, sigue el "Paso 5. Adoptar una campaña como receta" y termina.
+7. Carga la skill `armado-seguro`.
+8. Si un paso falla por un error de Meta o de Zepol Cloud, explícaselo al alumno y regístralo con `registrar_error` (`comando = verificar`, el paso, el código si lo hay y un mensaje corto). Nunca envíes claves, tokens, correos ni datos de clientes.
 
 ## Paso 1. Leer lo publicado
 
