@@ -1,6 +1,6 @@
 ---
 name: novedades
-description: Muestra las novedades de ZEPOL ADS (funciones nuevas, cambios de la metodología y arreglos) y el estado de la cuenta del alumno en Zepol Cloud: licencia, hasta cuándo recibe novedades, imágenes que le quedan hoy, si guardó su clave de OpenAI y si hay una versión nueva del plugin. Úsala cuando el alumno escriba /zepol-ads:novedades o pregunte qué hay de nuevo o cómo está su cuenta.
+description: Muestra las novedades de ZEPOL ADS (funciones nuevas, cambios de la metodología y arreglos) y el estado de la cuenta del alumno en Zepol Cloud: licencia, hasta cuándo recibe novedades, sus créditos para imágenes, cuántas imágenes le quedan hoy y si hay una versión nueva del plugin. Úsala cuando el alumno escriba /zepol-ads:novedades o pregunte qué hay de nuevo o cómo está su cuenta.
 ---
 
 # Novedades y estado de la cuenta
@@ -21,12 +21,12 @@ Cuenta qué hay de nuevo en ZEPOL y cómo está la cuenta del alumno.
 
 ## Paso 1. Estado de la cuenta
 
-1. Llama `estado_cuenta` con `version_plugin = "0.5.0"` (la versión de este plugin).
+1. Llama `estado_cuenta` con `version_plugin = "0.6.0"` (la versión de este plugin).
 2. Muestra una tabla corta con dos columnas, "Dato" y "Estado":
    - **Licencia**: activa, inactiva o sin licencia, con su tipo (beta o compra).
    - **Novedades**: hasta qué fecha las recibe, o "de por vida".
    - **Imágenes de hoy**: cuántas le quedan.
-   - **Clave de OpenAI**: guardada (con su final, por ejemplo sk-…abcd) o "Falta: guárdala en Mi cuenta, en el panel de ZEPOL ADS". Nunca la pidas en el chat.
+   - **Créditos**: cuántos le quedan para crear imágenes con IA y cuándo se renuevan (`creditos`). Si `por_mes` es 0: "Los créditos del mes vienen con tus novedades: renuévalas para seguir recibiéndolos." Si `imagenes_disponibles` es `false`: "La creación de imágenes todavía no está activa."
    - **Versión del plugin**: la instalada y, si `actualizar_plugin` es `true`, "Hay una versión nueva".
    - **Arranque**: "Hecho" si `onboarding.arranque_completo` es `true`; si no, "Falta: escribe /zepol-ads:empezar".
 3. Si la licencia no está activa, muestra el aviso de la herramienta tal cual.

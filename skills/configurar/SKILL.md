@@ -1,11 +1,13 @@
 ---
 name: configurar
-description: Crea o actualiza el perfil del negocio de ZEPOL ADS con una entrevista corta (tipo de negocio y experiencia, atención por WhatsApp, precio en los anuncios, pruebas sociales, tasa de entrega, app del formulario y activos de Meta) y lo guarda en Zepol Cloud. Úsala cuando el alumno escriba /zepol-ads:configurar o quiera cambiar un dato de su negocio. Para empezar desde cero se usa /zepol-ads:empezar, que reutiliza esta entrevista.
+description: Crea o actualiza el perfil del negocio de ZEPOL ADS (contra entrega o marca propia) con una entrevista corta (tu negocio, cómo vendes, WhatsApp, tu marca, pruebas sociales y activos de Meta) y lo guarda en Zepol Cloud. Úsala cuando el alumno escriba /zepol-ads:configurar o quiera cambiar un dato de su negocio. Para empezar desde cero se usa /zepol-ads:empezar, que reutiliza esta entrevista.
 ---
 
 # Configurar el perfil del negocio
 
 Esta skill arma el perfil del negocio una sola vez. Las demás skills de ZEPOL lo leen desde Zepol Cloud y lo aplican en cada campaña sin volver a preguntar.
+
+Lo más cómodo para el alumno es llenarlo en su bienvenida web (https://zepol-ad-beacon.lovable.app/bienvenida): ZEPOL lee su tienda y casi todo se llena solo. Esta entrevista sirve para hacerlo en el chat o para cambiar un dato.
 
 - El perfil se guarda en Zepol Cloud con la herramienta `guardar_perfil` y se lee con `obtener_perfil`. No se guarda ningún archivo local.
 - Los datos por producto no se piden aquí: los pide `/zepol-ads:nueva-campana` para cada producto.
@@ -53,28 +55,51 @@ Esta skill arma el perfil del negocio una sola vez. Las demás skills de ZEPOL l
 
 ## Paso 2. Entrevista
 
-Haz los bloques en este orden. Cada pregunta indica el dato que se guarda en Zepol Cloud (parámetro de `guardar_perfil`). Los datos marcados `extras.…` van dentro del parámetro `extras` (por ejemplo `extras.envios`).
+Haz los bloques en este orden. Cada pregunta indica el dato que se guarda en Zepol Cloud (parámetro de `guardar_perfil`). Los datos marcados `extras.…` van dentro del parámetro `extras` y los marcados `branding.…`, dentro de `branding`.
+
+No preguntes estas tres cosas, aunque el alumno las mencione:
+
+- **El precio en los anuncios:** ningún anuncio de ZEPOL muestra precio.
+- **La tasa de entrega:** la pide `/zepol-ads:reporte` cuando la necesita.
+- **La app del formulario contra entrega:** la ves tú al revisar la landing en `/zepol-ads:nueva-campana`.
 
 ### Bloque 1. Tu negocio
 
-1. "¿Cómo se llama tu negocio?" → `nombre_negocio`.
-2. "¿Por dónde vendes?" → `tipo_negocio`
-   - "Solo por mi tienda Shopify" → `shopify`
-   - "Solo por WhatsApp" → `whatsapp`
-   - "Por los dos" → `hibrido`
-3. "¿Cuánta experiencia tienes vendiendo por internet?" → `experiencia`
-   - "Recién empiezo" → `principiante`
-   - "Ya tengo experiencia" → `con_experiencia`
-4. "¿A dónde haces envíos?" En sus palabras ("Todo el Perú", "Solo Lima y Callao") → `extras.envios`.
-5. ZEPOL funciona solo para Perú. Si el alumno vende en otro país, dile: "Por ahora ZEPOL solo funciona para campañas en Perú." y sigue con Perú.
+1. "¿Qué tipo de negocio tienes?" → `categoria`
+   - "Vendo productos contra entrega" → `contra_entrega`
+   - "Tengo una marca propia" → `marca_propia`
+   - Si es otro tipo (un servicio con local, algo digital, una tienda con varias marcas o una agencia): "Por ahora ZEPOL está hecho para contra entrega y marcas propias. Los demás tipos llegan pronto: anótate en la lista de espera desde tu bienvenida, en https://zepol-ad-beacon.lovable.app/bienvenida." y detente.
+2. "¿Cómo se llama tu negocio?" → `nombre_negocio`.
+3. "¿En qué ciudad estás?" → `ciudad`.
+4. "¿Cuánta experiencia tienes con anuncios?" → `nivel_anuncios`
+   - "Nunca he hecho anuncios" → `nunca`
+   - "Solo he usado Promocionar" → `promocionar`
+   - "Uso el Administrador de anuncios" → `administrador`
+   - "Soy avanzado o tengo una agencia" → `avanzado`
+5. "¿Quién maneja tus anuncios?" → `quien_maneja`: "Yo mismo" → `yo`, "Alguien de mi equipo" → `equipo`, "Una agencia o un freelancer" → `agencia`, "Nadie todavía" → `nadie`.
+6. "¿A dónde haces envíos?" En sus palabras ("Todo el Perú", "Solo Lima y Callao") → `extras.envios`.
+7. ZEPOL funciona solo para Perú. Si el alumno vende en otro país, dile: "Por ahora ZEPOL solo funciona para campañas en Perú." y sigue con Perú.
 
-### Bloque 2. WhatsApp
+### Bloque 2. Cómo vendes
 
-Si `tipo_negocio` es `shopify`, no hagas este bloque.
+1. Solo en contra entrega: "¿En qué etapa estás?" → `etapa`: "Buscando mi producto ganador" → `buscando`, "Ya tengo un ganador" → `ganador`, "Tengo varios que venden" → `varios`.
+2. "¿Dónde vendes? Elige todas las que uses."
+   - Webs → `plataformas`: "Shopify" → `shopify`, "WooCommerce" → `woocommerce`, "Otra web" → `otra`.
+   - Otros lugares → `canales`: "WhatsApp" → `whatsapp`; en marca propia también "Tienda física" → `tienda`, "Instagram" → `instagram` y "Marketplaces" → `marketplaces`.
+   - Solo en contra entrega, por cada web: "¿Qué usas en {web}?" → `tipos_pagina` (por ejemplo `{ "shopify": ["landing"] }`): "Página de producto" → `producto`, "Landing por producto" → `landing`, "Tienda con muchos productos" → `tienda`.
+   - `tipo_negocio` se llena solo con esto; no lo envíes.
+3. "¿Cuál es el link de tu tienda o de tu Instagram?" → `sitio_web` (con https://).
+4. "¿Cómo te pagan? Elige todas las que uses." → `cobros`: "Contra entrega" → `contra_entrega`, "Pago adelantado por Yape, Plin o transferencia" → `adelantado`, "Separan con un adelanto" → `separan`; en marca propia también "Pago en mi web" → `pago_web` y "Pago en tienda" → `pago_tienda`.
+5. Solo en marca propia: "¿Tu marca tiene líneas o submarcas?" → `lineas` y "¿Tienes tiendas físicas? ¿Dónde?" → `tiendas` (listas de textos cortos).
+6. "¿Por qué te eligen tus clientes? Elige las que apliquen." → `por_que`: "Pagas al recibir" (solo contra entrega) o "Diseño propio" (solo marca propia), "Garantía", "Envío gratis", "Entrega rápida", "Calidad", "Precio", "Atención" y "Experiencia".
+
+### Bloque 3. WhatsApp
+
+Si `canales` no incluye `whatsapp`, no hagas este bloque.
 
 1. "¿Quién responde los chats de WhatsApp?" → `whatsapp_atencion`
-   - "Un bot" → `bot`
-   - "A mano" → `manual`
+   - "Yo o mi equipo, a mano" → `manual`
+   - "Un agente automático" → `bot`
    - "Las dos cosas" → `bot`
 2. "¿Cuántas personas atienden los chats?" → `extras.personas_atencion` (número entero).
 3. "¿Sientes que te falta personal para atender todos los chats?" → `whatsapp_poco_personal` ("Sí" → `true`, "No" → `false`).
@@ -87,12 +112,18 @@ Si `tipo_negocio` es `shopify`, no hagas este bloque.
    - "A veces" o "No" → `false`, y agrega a pendientes: "Etiquetar todos los chats de pedido en WhatsApp Business".
    - Con otra herramienta o WhatsApp normal, no envíes este dato.
 
-### Bloque 3. Precio en los anuncios
+### Bloque 4. Tu marca
 
-1. "¿Quieres que tus anuncios muestren el precio?" → `muestra_precio` ("Sí, mostrar el precio" → `true`, "No mostrarlo" → `false`).
-2. Aclara que es decisión de su negocio y que queda guardada para todas sus campañas.
+En marca propia haz todo el bloque. En contra entrega, solo el punto 3 (el tono).
 
-### Bloque 4. Pruebas sociales
+1. "¿Cuáles son los colores de tu marca? Si los sabes, dime el código (por ejemplo #1B2240) o descríbelos." → `branding.colores` (hasta 3, en formato #RRGGBB: principal, acento y fondo). Si los describe con palabras, propón los códigos y confírmalos.
+2. "¿Qué tipografías usa tu marca, para títulos y para textos?" → `branding.tipografias` (`titulos` y `textos`). "No sé" → no lo envíes.
+3. "¿Cómo le hablas a tus clientes? Elige hasta dos." → `branding.tono`: "Cercano" → `cercano`, "Premium" → `premium`, "Divertido" → `divertido`, "Técnico" → `tecnico`, "Inspirador" → `inspirador`.
+4. "¿Qué palabras usas mucho? ¿Y cuáles nunca usarías?" → `branding.palabras_si` y `branding.palabras_nunca`.
+5. "¿Tienes una frase o una promesa de marca?" → `branding.frases`.
+6. El logo y el manual de marca no se suben por el chat: "Tu logo y tu manual de marca se suben en tu bienvenida, en https://zepol-ad-beacon.lovable.app/bienvenida." Si el perfil ya los tiene, `obtener_perfil` trae sus enlaces en `archivos_marca`.
+
+### Bloque 5. Pruebas sociales
 
 Introduce el bloque así: "Ahora unos datos que ZEPOL puede usar en tus anuncios. Usa solo datos reales que puedas demostrar."
 
@@ -102,17 +133,6 @@ Introduce el bloque así: "Ahora unos datos que ZEPOL puede usar en tus anuncios
 4. "¿Alguien reconocido recomienda tu producto o tu tienda? Por ejemplo, un especialista o un medio." → `prueba_social_recomendaciones` (lista de textos cortos en sus palabras).
 5. Si dio al menos un dato: "¿Confirmas que estos datos son reales y puedes demostrarlos?"
    - Si dice que no, no envíes ninguna prueba social y explica: "No los voy a usar en tus anuncios. Cuando los tengas, corre /zepol-ads:configurar y los agregas."
-
-### Bloque 5. Entregas
-
-1. "De cada 100 pedidos contra entrega, ¿cuántos se entregan y se pagan?" → `tasa_entrega_pct` (número de 0 a 100).
-   - Explica en una línea para qué sirve: "Con esto calculo cuánto te cuesta cada pedido que sí se entrega."
-   - "No sé" → no lo envíes y agrega a pendientes: "Calcular la tasa de entrega contra entrega".
-   - Si responde con una fracción o con pedidos totales (por ejemplo, "de 200 se entregan 110"), conviértelo a porcentaje y confírmalo.
-2. Si `tipo_negocio` no es `whatsapp`: "¿Qué app usas para el formulario contra entrega de tu tienda?" → `app_formulario`
-   - "Releasit" → `releasit`
-   - "Otra" → pregunta cuál y envía su nombre en minúsculas.
-   - "No uso formulario" → `ninguna`, y agrega a pendientes: "Instalar un formulario contra entrega en la tienda".
 
 ### Bloque 6. Activos de Meta
 
@@ -137,10 +157,10 @@ En los dos casos, todos los IDs se envían solo con números: quita `act_` y cua
    - Si no hay ninguna: "No encuentro una cuenta de Instagram vinculada a tu cuenta publicitaria. Vincúlala en Configuración del negocio, en Cuentas de Instagram, y vuelve a correr /zepol-ads:configurar." Agrégalo a pendientes.
 5. **Píxel** → `meta_pixel_id`.
    - Llama `ads_get_datasets` con la cuenta elegida. Si hay varios, pregunta: "¿Qué píxel tiene instalado tu tienda?"
-   - Si no hay ninguno y el negocio vende por Shopify: "No encuentro un píxel en esta cuenta. Créalo en el Administrador de eventos y conéctalo a tu tienda Shopify." Agrégalo a pendientes.
+   - Si no hay ninguno y el negocio vende por una web (`plataformas` no está vacío): "No encuentro un píxel en esta cuenta. Créalo en el Administrador de eventos y conéctalo a tu tienda." Agrégalo a pendientes.
    - Aquí solo eliges el píxel. Si recibe eventos lo revisa `/zepol-ads:diagnostico`.
 6. **Número de WhatsApp** → `whatsapp_numero`.
-   - Pregúntalo si el negocio usa WhatsApp.
+   - Pregúntalo si `canales` incluye `whatsapp`.
    - "¿Cuál es el número de WhatsApp Business conectado a tu página?"
    - El conector no lee el número de la página, así que lo escribe el alumno.
    - Quita espacios, guiones y el prefijo. Debe quedar `+51` seguido de 9 dígitos que empiezan con 9, por ejemplo `+51987654321`.
@@ -150,27 +170,29 @@ En los dos casos, todos los IDs se envían solo con números: quita `act_` y cua
 ## Paso 3. Resumen y confirmación
 
 1. Muestra una tabla con dos columnas, "Dato" y "Valor", en palabras simples (por ejemplo "Shopify y WhatsApp", no `hibrido`). Usa estas filas, juntando los datos de cada una:
-   - Negocio: nombre, por dónde vende y experiencia.
+   - Negocio: tipo (contra entrega o marca propia), nombre, ciudad, experiencia con anuncios y quién los maneja.
+   - Cómo vendes: etapa (contra entrega), webs con lo que usa en cada una, otros lugares donde vende, link y cómo le pagan.
+   - Marca propia: líneas y tiendas.
+   - Por qué lo eligen.
    - Envíos.
    - WhatsApp: quién atiende, cuántas personas, si falta personal, herramienta y etiquetas. Omite la fila si no usa WhatsApp.
-   - Precio en los anuncios.
+   - Tu marca: colores, tipografías, tono, palabras y frase. En contra entrega, solo el tono.
    - Pruebas sociales: clientes, calificación con reseñas y fuente, y recomendaciones, o "No se usan" si no están confirmadas.
-   - Entregas: tasa de entrega y app del formulario.
    - Cuenta publicitaria, con su zona horaria.
    - Página.
    - Instagram, con arroba.
    - Píxel.
    - Número de WhatsApp, con "(vinculado a la página)" si el alumno lo confirmó.
    - En cada activo de Meta, pon el ID entre paréntesis después del nombre.
-2. Incluye una línea fija: "Siempre: catálogo apagado, mejoras automáticas apagadas y nada se publica sin tu aprobación."
+2. Incluye una línea fija: "Siempre: catálogo apagado, mejoras automáticas apagadas, ningún anuncio con precio y nada se publica sin tu aprobación."
 3. Si hay pendientes, lístalos debajo.
 4. Pregunta: "¿Guardo tu perfil así?" con las opciones "Guardar perfil" y "Corregir un dato".
    - Si el alumno ya pidió en su mensaje que guardes sin volver a preguntar, no hagas la pregunta: muestra el resumen y guarda.
 
 ## Paso 4. Guardar el perfil en Zepol Cloud
 
-1. Llama `guardar_perfil` con `nombre_negocio`, `tipo_negocio`, `experiencia` y los demás datos que tengas, y en `extras` los datos marcados así y la lista de pendientes (`extras.pendientes`). No envíes los datos que el alumno no sabe.
-2. El perfil se identifica por `nombre_negocio`: si ya existía con ese nombre, se actualiza y lo que no envíes se conserva. Los `extras` se combinan con los que ya estaban guardados.
+1. Llama `guardar_perfil` con `nombre_negocio`, `categoria`, `nivel_anuncios` y los demás datos que tengas; en `extras`, los datos marcados así y la lista de pendientes (`extras.pendientes`); y en `branding`, los de tu marca. No envíes los datos que el alumno no sabe. `tipo_negocio` y `experiencia` se llenan solos.
+2. El perfil se identifica por `nombre_negocio`: si ya existía con ese nombre, se actualiza y lo que no envíes se conserva. Los `extras` y el `branding` se combinan con los que ya estaban guardados. Las listas (`plataformas`, `canales`, `cobros`, `por_que`, `lineas` y `tiendas`) reemplazan la lista guardada: envíalas completas.
 3. Si `guardar_perfil` responde con un error, muéstralo con qué pasó + cómo arreglarlo y ofrece corregir el dato. No reintentes en bucle. Si el error no es de un dato del alumno, regístralo con `registrar_error` (`comando = configurar`, sin claves, tokens ni datos de clientes).
 4. Confirma que quedó guardado con lo que devuelve la herramienta (el perfil con su `id`).
 

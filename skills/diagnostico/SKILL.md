@@ -42,7 +42,7 @@ Esta skill **solo lee**. No crea, edita ni publica nada en Meta.
 2. **Instagram**: confirma con `ads_get_ig_accounts` que la cuenta de Instagram del perfil sigue vinculada.
 3. **Píxel y API de Conversiones**: con `ads_get_dataset_details`, `ads_get_dataset_stats` y `ads_get_dataset_quality`, revisa si el píxel del perfil está activo, qué eventos recibe y si llegan eventos del servidor (API de Conversiones).
    - Si no llegan eventos del servidor, avísalo con claridad y di desde cuándo, porque puede pasar meses sin que nadie lo note.
-4. **Landing** (si el negocio vende por Shopify): cuando el alumno indique la URL de un producto, revisa que responda (HTTP 200) y que tenga el formulario contra entrega de la app del perfil.
+4. **Landing** (si el negocio vende por una web: Shopify, WooCommerce u otra): cuando el alumno indique la URL de un producto, revisa que responda (HTTP 200) y que tenga un formulario contra entrega. Mira tú qué app usa (Releasit u otra) y, si el perfil no la tiene, guárdala con `guardar_perfil` (`app_formulario`); no se la preguntes al alumno.
    - El resto de la revisión de la landing está en la metodología (`configuracion`, canal `shopify`).
 5. **WhatsApp** (si el negocio vende por WhatsApp): recuerda que la página necesita el número de WhatsApp Business del perfil vinculado y verificado.
 

@@ -1,15 +1,15 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "zepol-ads-beta",
-  "description": "Canal beta de ZEPOL ADS: asistente de campañas de Meta para ecommerce contra entrega en Perú.",
+  "description": "Canal beta de ZEPOL ADS: asistente de campañas de Meta para negocios contra entrega y marcas propias en Perú.",
   "owner": {
     "name": "Alexis López"
   },
   "plugins": [
     {
       "name": "zepol-ads",
-      "description": "Asistente para campañas de Meta para ecommerce contra entrega en Perú, a WhatsApp o a Shopify. Todo se crea como borrador y nada se publica sin tu aprobación.",
-      "version": "0.5.0",
+      "description": "Asistente para campañas de Meta para negocios contra entrega y marcas propias en Perú, a WhatsApp o a tu web. Todo se crea como borrador y nada se publica sin tu aprobación.",
+      "version": "0.6.0",
       "author": {
         "name": "Alexis López"
       },

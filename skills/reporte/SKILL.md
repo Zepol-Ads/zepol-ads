@@ -26,7 +26,7 @@ Esta skill **no cambia nada en Meta**: solo lee los números y guarda el reporte
 
 ## Paso 0. Antes de empezar
 
-1. Llama `estado_cuenta` con `version_plugin = "0.5.0"`. Mira `onboarding.pasos`:
+1. Llama `estado_cuenta` con `version_plugin = "0.6.0"`. Mira `onboarding.pasos`:
    - si falta el perfil o la cuenta publicitaria (`perfil` o `activos_meta` en `false`), di: "Antes de el reporte falta tu arranque: escribe /zepol-ads:empezar. En unos minutos encuentra tus activos de Meta y estudia tu cuenta." y detente;
    - si solo falta el diagnóstico, sigue y, al terminar, recuerda: "Te falta el arranque: escribe /zepol-ads:empezar para que estudie tu cuenta."
 2. Llama `obtener_perfil`. Si hay varios perfiles, pregunta con qué negocio trabajas.
@@ -63,7 +63,9 @@ Esta skill **no cambia nada en Meta**: solo lee los números y guarda el reporte
   - Si no hay registros, pregunta: "¿Cuántos pedidos entregados y pagados tuviste de esta campaña en estas fechas? Si no lo sabes, uso la estimación de ZEPOL."
   - Con los pedidos entregados, costo por pedido entregado = gasto ÷ pedidos entregados.
   - Si no, usa el `costo_por_pedido_estimado` de `evaluar_conjuntos` y divídelo entre la tasa de entrega. Dilo claro: "Es una estimación".
-- Si el perfil no tiene tasa de entrega: "No tengo tu tasa de entrega, así que no puedo calcular el costo por pedido entregado. Corre /zepol-ads:configurar para agregarla." y muestra el resto del reporte.
+- Si el perfil no tiene tasa de entrega, pídela aquí, una sola vez: "De cada 100 pedidos contra entrega, ¿cuántos se entregan y se pagan? Con eso calculo cuánto te cuesta cada pedido entregado."
+  - Si responde, guárdala con `guardar_perfil` (`nombre_negocio` y `tasa_entrega_pct`, de 0 a 100) y úsala. Si responde con pedidos totales (por ejemplo, "de 200 se entregan 110"), conviértelo a porcentaje y confírmalo.
+  - Si no la sabe, muestra el resto del reporte sin el costo por pedido entregado y dile: "Cuando sepas tu tasa de entrega, dímela y la uso en tu siguiente reporte."
 
 ## Paso 4. Mostrar el reporte
 

@@ -1,6 +1,6 @@
 ---
 name: nueva-campana
-description: Arma una campaña nueva de Meta para un producto con ZEPOL ADS, a WhatsApp o a Shopify (web contra entrega). Pide los datos del producto, trae la metodología de Zepol Cloud, crea todo como borrador con las reglas de armado seguro, guarda la receta, hace la revisión antes de publicar y publica solo con un sí explícito del alumno. Úsala cuando el alumno escriba /zepol-ads:nueva-campana o pida lanzar, crear o testear un producto en Meta.
+description: Arma una campaña nueva de Meta para un producto contra entrega con ZEPOL ADS, a WhatsApp o a su web (Shopify, WooCommerce u otra, con formulario contra entrega). Pide los datos del producto, trae la metodología de Zepol Cloud, crea todo como borrador con las reglas de armado seguro, guarda la receta, hace la revisión antes de publicar y publica solo con un sí explícito del alumno. Úsala cuando el alumno escriba /zepol-ads:nueva-campana o pida lanzar, crear o testear un producto en Meta.
 ---
 
 # Nueva campaña
@@ -28,8 +28,9 @@ El recorrido completo: metodología de Zepol Cloud por etapa → `guardar_produc
 
 ## Paso 0. Antes de empezar
 
-1. Llama `estado_cuenta` con `version_plugin = "0.5.0"`. Si `onboarding.arranque_completo` es `false`, di: "Antes de armar una campaña falta tu arranque: escribe /zepol-ads:empezar. En unos minutos encuentra tus activos de Meta, estudia tu cuenta y te deja listo." y detente. Si `/zepol-ads:empezar` te trajo hasta aquí, el arranque ya está hecho.
+1. Llama `estado_cuenta` con `version_plugin = "0.6.0"`. Si `onboarding.arranque_completo` es `false`, di: "Antes de armar una campaña falta tu arranque: escribe /zepol-ads:empezar. En unos minutos encuentra tus activos de Meta, estudia tu cuenta y te deja listo." y detente. Si `/zepol-ads:empezar` te trajo hasta aquí, el arranque ya está hecho.
 2. Llama `obtener_perfil`. Si hay varios perfiles, pregunta con qué negocio trabajas.
+   - Si `categoria` es `marca_propia`, di: "Las campañas para marcas propias llegan pronto, con su propia metodología. Mientras tanto, puedo darte el reporte de tus campañas actuales con /zepol-ads:reporte y proponerte cambios con /zepol-ads:optimizar." y detente.
 3. Confirma que el conector de Meta está disponible. Si no: "No encuentro el conector de Meta. Conéctalo desde la sección Conectores de Claude y vuelve a correr /zepol-ads:nueva-campana."
 4. Usa el `diagnostico` del perfil (ganadores y alertas) en los pasos que lo piden.
 5. Carga la skill `armado-seguro`. Todo lo que se cree o edite en Meta sigue sus reglas, en su orden.
@@ -41,23 +42,26 @@ Pide los datos que guarda `guardar_producto`. Si el producto ya está en el perf
 | Campo | Pregunta |
 |---|---|
 | `nombre` | "¿Qué producto vas a anunciar?" |
-| `precio_venta` | "¿A cuánto lo vendes? Aunque no lo muestres en el anuncio, lo necesito para medir si la campaña es rentable." |
+| `precio_venta` | "¿A cuánto lo vendes? No va en el anuncio: lo necesito para medir si la campaña es rentable." |
 | `margen_bajo` | "¿Dirías que el margen de este producto es bajo?" |
 | `creativos_disponibles` | "¿Qué creativos tienes de este producto: videos, imágenes, los dos o ninguno?" (`videos`, `imagenes`, `ambos` o `ninguno`). Luego pide cada uno: archivo, URL o ID de la publicación. |
 | `fotos_urls` | "¿Tienes fotos reales del producto? Pásame el enlace público (https) de una o varias, por ejemplo el de la foto en tu tienda." La primera es la que usa `generar_imagen`. |
 | `es_complejo` y `para_personas_mayores` | "¿El producto es difícil de explicar? ¿Es para personas mayores?" |
-| `landing_url` | Solo si la campaña va a Shopify: "¿Cuál es el enlace del producto en tu tienda?" Debe empezar con https://. |
+| `landing_url` | Solo si la campaña va a su web: "¿Cuál es el enlace del producto en tu tienda?" Debe empezar con https://. |
 | `extras` | "Cuéntame del producto: qué problema resuelve, para quién es, sus beneficios, las dudas que más te preguntan, la garantía y sus variantes." Guarda solo lo que el alumno diga, en `extras` (`problema`, `publico`, `beneficios`, `objeciones`, `garantia`, `variantes`). |
 
 - No calcules el margen: cada negocio conoce sus números.
 - No inventes datos del producto. Si el alumno no sabe algo, no lo envíes.
+- Si el producto tiene `estilo` (lo propone `/zepol-ads:empezar`), úsalo en sus imágenes. Si no lo tiene y hay fotos, propónlo como en `empezar`, Paso 2b, y guárdalo con el producto.
 - Guarda el producto con `guardar_producto`, con el `perfil_id` del perfil. Si ya existía, envía su `id` para actualizarlo: lo que no envíes se conserva y los `extras` se combinan con los guardados. `fotos_urls` reemplaza la lista completa.
 
-## Paso 2. Canal: WhatsApp o Shopify
+## Paso 2. Canal: WhatsApp o tu web
 
-- `tipo_negocio = shopify` → Shopify.
-- `tipo_negocio = whatsapp` → WhatsApp.
-- `tipo_negocio = hibrido` → pregunta: "¿A dónde quieres llevar a la gente con esta campaña?" con las opciones "A mi tienda Shopify" y "A mi WhatsApp".
+El canal `shopify` de la metodología es la web con formulario contra entrega, sea Shopify, WooCommerce u otra.
+
+- `tipo_negocio = shopify` (vende con una web) → canal `shopify`.
+- `tipo_negocio = whatsapp` → canal `whatsapp`.
+- `tipo_negocio = hibrido` → pregunta: "¿A dónde quieres llevar a la gente con esta campaña?" con las opciones "A mi tienda" y "A mi WhatsApp".
   - Si la metodología (`obtener_metodologia` con `etapa = estructura`) recomienda un canal para este negocio y este producto, muéstralo antes de que el alumno elija. El alumno decide.
 
 ## Paso 3. Pedir la metodología
@@ -68,10 +72,11 @@ Pide los datos que guarda `guardar_producto`. Si el producto ya está en el perf
 
 ## Paso 4. Rama según el canal
 
-### Rama Shopify (web contra entrega)
+### Rama web (Shopify, WooCommerce u otra, con formulario contra entrega)
 
-1. **Landing**: revisa que `landing_url` responda (HTTP 200) y que tenga el formulario contra entrega de la app del perfil (`app_formulario`).
-   - Si no responde: "Tu landing no responde. Revisa que el producto esté publicado en Shopify y vuelve a intentarlo."
+1. **Landing**: revisa que `landing_url` responda (HTTP 200).
+   - Si no responde: "Tu landing no responde. Revisa que el producto esté publicado en tu tienda y vuelve a intentarlo."
+   - **Formulario contra entrega:** no le preguntes al alumno qué app usa. Míralo tú en la landing (Releasit u otra app de formulario contra entrega). Si el perfil no lo tiene o tiene otra, guárdalo con `guardar_perfil` (`app_formulario`, el nombre de la app). Si no encuentras ningún formulario, dilo: "No veo un formulario contra entrega en tu landing. Sin él, tus clientes no pueden pedir." y agrégalo a pendientes.
    - El resto de la revisión de la landing está en la metodología (`configuracion`, canal `shopify`).
 2. **Píxel**: el conjunto usa el píxel del perfil (`meta_pixel_id`) con el evento de compra. Si el perfil no tiene píxel, detente: "Tu perfil no tiene píxel. Créalo en el Administrador de eventos, corre /zepol-ads:configurar para elegirlo y vuelve aquí."
 3. **Enlaces**: cada anuncio lleva `landing_url` como destino y las UTM de la regla 6 de `armado-seguro`.
@@ -87,12 +92,13 @@ Pide los datos que guarda `guardar_producto`. Si el producto ya está en el perf
 ## Paso 5. Creativos
 
 - **Ganadores que se reutilizan**: van por su publicación (`object_story_id` + `url_tags`), con la regla 5 de `armado-seguro`. Cuáles se reutilizan sale de la metodología (`creativos`) y del diagnóstico.
-- **Imágenes nuevas**: genéralas con `generar_imagen` (`producto_id`, `temperatura`, `angulo` y los textos). Usa la primera foto guardada del producto; pasa `foto_producto_url` solo si el alumno quiere otra foto. Usa la clave de OpenAI que el alumno guardó en su panel. Zepol Cloud aloja cada imagen y devuelve una URL pública: súbela a la cuenta con `ads_creative_upload_media`.
+- **Imágenes nuevas**: genéralas con `generar_imagen` (`producto_id`, `temperatura`, `angulo` y los textos), con el estilo del producto (`estilo`) en el ángulo. Usa la primera foto guardada del producto; pasa `foto_producto_url` solo si el alumno quiere otra foto. Zepol Cloud aloja cada imagen y devuelve una URL pública: súbela a la cuenta con `ads_creative_upload_media`.
+  - **Créditos:** cada imagen o edición usa 1 crédito de ZEPOL del alumno. Antes de generar, dile cuántas imágenes vas a crear y cuántos créditos le quedan (`estado_cuenta` → `creditos`), y pregunta si sigues. Si algo falla, el crédito vuelve solo.
+  - Si `generar_imagen` dice que no le quedan créditos o que la creación de imágenes todavía no está activa, díselo y sigue con los creativos que el alumno tiene.
   - Si `generar_imagen` dice que falta la foto, vuelve al paso 1 y pide el enlace de una foto real del producto.
-  - Si `generar_imagen` dice que falta la clave de OpenAI, pide guardarla en "Mi cuenta" del panel de ZEPOL ADS. No la pidas en el chat.
   - Guarda el `id` de cada creativo que devuelve: va en la receta (`creativo.creativo_id`).
 - **Videos o imágenes del alumno**: necesitan una URL pública para subirse. Por ahora pídele al alumno un enlace público propio (por ejemplo, de su tienda). No uses alojamientos temporales públicos.
-- **Textos**: escríbelos con la metodología (`textos`), que trae las estructuras y los bancos de frases. Muéstralos al alumno; si pide cambios, ajústalos respetando esas reglas.
+- **Textos**: escríbelos con la metodología (`textos`), que trae las estructuras y los bancos de frases. Ningún texto ni imagen lleva el precio. Muéstralos al alumno; si pide cambios, ajústalos respetando esas reglas.
 
 ## Paso 6. Propuesta y aprobación
 
@@ -138,11 +144,11 @@ Muestra una tabla con cada punto y su estado ("Listo" o qué falta):
 | Punto | Qué se revisa |
 |---|---|
 | Validación | Todos los objetos en `VALIDATED`, sin errores |
-| Destino | Shopify: píxel y evento de compra en cada conjunto. WhatsApp: número vinculado a la página |
+| Destino | Web: píxel y evento de compra en cada conjunto. WhatsApp: número vinculado a la página |
 | Presupuesto | Total por día de la campaña |
 | Inicio | Fecha y hora en la zona horaria de la cuenta |
 | Catálogo y mejoras | Catálogo vacío en la campaña y mejoras en `OPT_OUT` en cada anuncio |
-| Enlaces | Shopify: cada URL responde y lleva sus UTM |
+| Enlaces | Web: cada URL responde y lleva sus UTM |
 | Creativos | Cada video e imagen aparece en su vista previa |
 | Vistas previas | Un enlace `preview_url` por anuncio |
 

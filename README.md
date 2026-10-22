@@ -1,12 +1,12 @@
 # ZEPOL ADS
 
-Asistente para crear, publicar, medir y optimizar campañas de Meta (Facebook e Instagram) desde Claude. Está hecho para ecommerce con pago contra entrega en Perú, con campañas a WhatsApp o a Shopify.
+Asistente para crear, publicar, medir y optimizar campañas de Meta (Facebook e Instagram) desde Claude. Está hecho para negocios contra entrega y marcas propias en Perú, con campañas a WhatsApp o a tu web (Shopify, WooCommerce u otra).
 
 - Todo se crea como borrador en tu cuenta.
 - Nada se publica ni gasta sin tu "sí".
 - Funciona con el conector oficial de Meta (`mcp.facebook.com/ads`) y con tu propia cuenta.
 
-Versión 0.5.0. Empieza con un solo comando: `/zepol-ads:empezar` lee lo que llenaste en la web de ZEPOL, encuentra tus activos de Meta, estudia tu cuenta y te propone tu primera campaña. Todos los comandos usan Zepol Cloud: el perfil, los productos, la metodología, las imágenes, las recetas, los diagnósticos y los reportes viven en el servidor. Falta la prueba en vivo de punta a punta.
+Versión 0.6.0. Empieza con un solo comando: `/zepol-ads:empezar` lee lo que llenaste en la web de ZEPOL (tu negocio, tu marca y tus productos), propone el estilo de cada producto, encuentra tus activos de Meta, estudia tu cuenta y te propone tu primera campaña. Las campañas para marcas propias llegan pronto; mientras tanto, ZEPOL ya hace su diagnóstico y sus reportes. Todos los comandos usan Zepol Cloud: el perfil, los productos, la metodología, las imágenes, las recetas, los diagnósticos y los reportes viven en el servidor. Falta la prueba en vivo de punta a punta.
 
 ## Comandos
 
@@ -15,13 +15,13 @@ Versión 0.5.0. Empieza con un solo comando: `/zepol-ads:empezar` lee lo que lle
 | `/zepol-ads:empezar` | **Empieza aquí.** Arranque completo: conexiones, tu negocio, tus activos de Meta, el estudio de tu cuenta, tu plan de arranque y el borrador de tu primera campaña |
 | `/zepol-ads:configurar` | Cambia los datos de tu negocio con una entrevista corta |
 | `/zepol-ads:diagnostico` | Estudia tu cuenta (accesos, historial por producto y ganadores) y guarda el diagnóstico |
-| `/zepol-ads:nueva-campana` | Arma una campaña a WhatsApp o a Shopify como borrador, guarda su receta y la publica con tu aprobación |
+| `/zepol-ads:nueva-campana` | Arma una campaña contra entrega a WhatsApp o a tu web como borrador, guarda su receta y la publica con tu aprobación |
 | `/zepol-ads:verificar` | Compara lo publicado contra la receta de la campaña; adopta como receta una campaña creada por tu cuenta |
 | `/zepol-ads:reporte` | Métricas y costo por pedido entregado; guarda el reporte |
 | `/zepol-ads:optimizar` | Propone acciones diarias, no aplica nada sin tu aprobación y guarda lo que se decidió |
 | `/zepol-ads:limpiar` | Marca borradores obsoletos y reconstruye desde la receta |
 | `/zepol-ads:feedback` | Le envía a Alexis tu comentario, una idea o un problema |
-| `/zepol-ads:novedades` | Novedades de ZEPOL y el estado de tu cuenta (licencia, imágenes y versión) |
+| `/zepol-ads:novedades` | Novedades de ZEPOL y el estado de tu cuenta (licencia, créditos, imágenes y versión) |
 
 `armado-seguro` no es un comando: son las reglas técnicas que las demás skills siguen cada vez que crean, editan o publican en Meta.
 
@@ -64,7 +64,7 @@ Para probar sin instalar, desde una copia local: `claude --plugin-dir ./plugin`.
 
 En Zepol Cloud, el servidor de ZEPOL, con la cuenta de tu licencia: perfil del negocio (con su diagnóstico), productos (con sus fotos), recetas de campaña, reportes, creativos y pedidos de WhatsApp. Cada alumno solo ve sus propios datos. El plugin no guarda archivos locales.
 
-Ningún dato guarda contraseñas, claves ni tokens. La clave de OpenAI se guarda cifrada desde el panel.
+Ningún dato guarda contraseñas, claves ni tokens. Las imágenes con IA usan los créditos de ZEPOL de tu plan: no necesitas ninguna clave.
 
 ## Servidor de ZEPOL
 
