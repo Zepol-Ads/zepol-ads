@@ -28,7 +28,7 @@ El recorrido completo: metodología de Zepol Cloud por etapa → `guardar_produc
 
 ## Paso 0. Antes de empezar
 
-1. Llama `estado_cuenta` con `version_plugin = "0.6.0"`. Si `onboarding.arranque_completo` es `false`, di: "Antes de armar una campaña falta tu arranque: escribe /zepol-ads:empezar. En unos minutos encuentra tus activos de Meta, estudia tu cuenta y te deja listo." y detente. Si `/zepol-ads:empezar` te trajo hasta aquí, el arranque ya está hecho.
+1. Llama `estado_cuenta` con `version_plugin = "0.6.1"`. Si `onboarding.arranque_completo` es `false`, di: "Antes de armar una campaña falta tu arranque: escribe /zepol-ads:empezar. En unos minutos encuentra tus activos de Meta, estudia tu cuenta y te deja listo." y detente. Si `/zepol-ads:empezar` te trajo hasta aquí, el arranque ya está hecho.
 2. Llama `obtener_perfil`. Si hay varios perfiles, pregunta con qué negocio trabajas.
    - Si `categoria` es `marca_propia`, di: "Las campañas para marcas propias llegan pronto, con su propia metodología. Mientras tanto, puedo darte el reporte de tus campañas actuales con /zepol-ads:reporte y proponerte cambios con /zepol-ads:optimizar." y detente.
 3. Confirma que el conector de Meta está disponible. Si no: "No encuentro el conector de Meta. Conéctalo desde la sección Conectores de Claude y vuelve a correr /zepol-ads:nueva-campana."
@@ -67,6 +67,7 @@ El canal `shopify` de la metodología es la web con formulario contra entrega, s
 ## Paso 3. Pedir la metodología
 
 - Llama `obtener_metodologia` con el canal elegido para las etapas `estructura`, `configuracion`, `creativos` y `textos`.
+- Si Zepol Cloud responde que el alumno llegó al límite de consultas de hoy, muéstrale ese mensaje tal cual y detente. No armes ninguna parte sin su metodología.
 - Con esas reglas, el perfil, el producto y el diagnóstico, arma la especificación completa de la campaña: objetivo, optimización, estructura, presupuestos, públicos, ubicaciones, nombres, recomendación de inicio y el plan de creativos y textos.
 - Aplica solo lo que dicen las reglas. Si algo no está cubierto, pregúntale al alumno.
 
@@ -76,7 +77,7 @@ El canal `shopify` de la metodología es la web con formulario contra entrega, s
 
 1. **Landing**: revisa que `landing_url` responda (HTTP 200).
    - Si no responde: "Tu landing no responde. Revisa que el producto esté publicado en tu tienda y vuelve a intentarlo."
-   - **Formulario contra entrega:** no le preguntes al alumno qué app usa. Míralo tú en la landing (Releasit u otra app de formulario contra entrega). Si el perfil no lo tiene o tiene otra, guárdalo con `guardar_perfil` (`app_formulario`, el nombre de la app). Si no encuentras ningún formulario, dilo: "No veo un formulario contra entrega en tu landing. Sin él, tus clientes no pueden pedir." y agrégalo a pendientes.
+   - **Formulario contra entrega:** no le preguntes al alumno qué app usa. Míralo tú en la landing (Releasit u otra app de formulario contra entrega). Si el perfil no lo tiene o tiene otra, guárdalo con `guardar_perfil` (`perfil_id`, `nombre_negocio` y `app_formulario`, el nombre de la app). Si no encuentras ningún formulario, dilo: "No veo un formulario contra entrega en tu landing. Sin él, tus clientes no pueden pedir." y agrégalo a pendientes.
    - El resto de la revisión de la landing está en la metodología (`configuracion`, canal `shopify`).
 2. **Píxel**: el conjunto usa el píxel del perfil (`meta_pixel_id`) con el evento de compra. Si el perfil no tiene píxel, detente: "Tu perfil no tiene píxel. Créalo en el Administrador de eventos, corre /zepol-ads:configurar para elegirlo y vuelve aquí."
 3. **Enlaces**: cada anuncio lleva `landing_url` como destino y las UTM de la regla 6 de `armado-seguro`.

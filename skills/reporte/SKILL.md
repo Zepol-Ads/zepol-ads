@@ -22,15 +22,18 @@ Esta skill **no cambia nada en Meta**: solo lee los números y guarda el reporte
 - No califiques los números con tu propio criterio.
 - Si no ves las herramientas de Zepol Cloud (`obtener_perfil`, `evaluar_conjuntos`), muestra los números sin calificarlos y di: "ZEPOL ADS no está conectado, así que te muestro tus números sin evaluarlos. En la app de Claude, conéctalo en Customize → Plugins → ZEPOL ADS, pestaña Conectores; en Claude Code, escribe /mcp y autentica zepol-cloud."
 - Si una herramienta de Zepol Cloud responde que la cuenta no tiene una licencia activa, muestra ese mensaje tal cual y detente.
+- Si Zepol Cloud responde que el alumno llegó al límite de consultas de hoy, muéstrale ese mensaje tal cual y detente. No es un error: no lo registres con `registrar_error`.
 - Si un paso falla por un error de Meta o de Zepol Cloud, explícaselo al alumno y regístralo con `registrar_error` (`comando = reporte`, el paso, el código si lo hay y un mensaje corto). Nunca envíes claves, tokens, correos ni datos de clientes.
 
 ## Paso 0. Antes de empezar
 
-1. Llama `estado_cuenta` con `version_plugin = "0.6.0"`. Mira `onboarding.pasos`:
-   - si falta el perfil o la cuenta publicitaria (`perfil` o `activos_meta` en `false`), di: "Antes de el reporte falta tu arranque: escribe /zepol-ads:empezar. En unos minutos encuentra tus activos de Meta y estudia tu cuenta." y detente;
+1. Llama `estado_cuenta` con `version_plugin = "0.6.1"`. Mira `onboarding.pasos`:
+   - si falta el perfil o la cuenta publicitaria (`perfil` o `activos_meta` en `false`), di: "Antes del reporte falta tu arranque: escribe /zepol-ads:empezar. En unos minutos encuentra tus activos de Meta y estudia tu cuenta." y detente;
    - si solo falta el diagnóstico, sigue y, al terminar, recuerda: "Te falta el arranque: escribe /zepol-ads:empezar para que estudie tu cuenta."
 2. Llama `obtener_perfil`. Si hay varios perfiles, pregunta con qué negocio trabajas.
 3. Del perfil usa `meta_cuenta_publicitaria_id` y `tasa_entrega_pct`.
+   - **Marca propia** (`categoria = marca_propia`): las reglas de lectura de ZEPOL son de contra entrega y la metodología de marcas llega pronto. Muestra los números de Meta (gasto, ventas, costo por venta y ROAS) sin calificarlos: no llames `evaluar_conjuntos` (Paso 2), no pidas ni uses la tasa de entrega (Paso 3) y dilo: "La lectura con el método de ZEPOL para marcas llega pronto: por ahora te muestro tus números tal cual."
+
 4. Si el alumno no dijo qué campaña ni qué periodo revisar, pregunta. Por defecto: las campañas activas, desde su inicio hasta ayer, en la zona horaria de la cuenta.
 5. Busca la receta de cada campaña con `listar_recetas` (por su `meta_campaign_id`). Si una campaña no tiene receta, el reporte se guarda igual, sin `receta_id`.
 
@@ -64,7 +67,7 @@ Esta skill **no cambia nada en Meta**: solo lee los números y guarda el reporte
   - Con los pedidos entregados, costo por pedido entregado = gasto ÷ pedidos entregados.
   - Si no, usa el `costo_por_pedido_estimado` de `evaluar_conjuntos` y divídelo entre la tasa de entrega. Dilo claro: "Es una estimación".
 - Si el perfil no tiene tasa de entrega, pídela aquí, una sola vez: "De cada 100 pedidos contra entrega, ¿cuántos se entregan y se pagan? Con eso calculo cuánto te cuesta cada pedido entregado."
-  - Si responde, guárdala con `guardar_perfil` (`nombre_negocio` y `tasa_entrega_pct`, de 0 a 100) y úsala. Si responde con pedidos totales (por ejemplo, "de 200 se entregan 110"), conviértelo a porcentaje y confírmalo.
+  - Si responde, guárdala con `guardar_perfil` (`perfil_id`, `nombre_negocio` y `tasa_entrega_pct`, de 0 a 100) y úsala. Si responde con pedidos totales (por ejemplo, "de 200 se entregan 110"), conviértelo a porcentaje y confírmalo.
   - Si no la sabe, muestra el resto del reporte sin el costo por pedido entregado y dile: "Cuando sepas tu tasa de entrega, dímela y la uso en tu siguiente reporte."
 
 ## Paso 4. Mostrar el reporte

@@ -19,10 +19,11 @@ Esta skill **solo lee**. No crea, edita ni publica nada en Meta.
 ## Metodología: siempre de Zepol Cloud
 
 - La metodología de ZEPOL vive en Zepol Cloud, no en este plugin. Eso incluye qué es un buen resultado y cómo se reutilizan los ganadores.
-- Pídela con `obtener_metodologia`: `etapa = optimizacion` (qué es un buen resultado) y `etapa = creativos` (reutilizar ganadores), con el canal de cada producto.
+- Qué es un buen resultado lo calcula Zepol Cloud: usa `evaluar_conjuntos` con `modo = historial` (Paso 3). Para reutilizar ganadores, pide `obtener_metodologia` con `etapa = creativos` y el canal de cada producto.
 - No improvises criterios propios.
 - Si no ves las herramientas de Zepol Cloud (por ejemplo `obtener_perfil`), ZEPOL no está conectado. Di: "ZEPOL ADS no está conectado. En la app de Claude, entra a Customize → Plugins → ZEPOL ADS, abre la pestaña Conectores y toca Conectar. En Claude Code, escribe /mcp y autentica zepol-cloud. Después vuelve a correr /zepol-ads:diagnostico." y detente.
 - Si una herramienta de Zepol Cloud responde que la cuenta no tiene una licencia activa, muestra ese mensaje tal cual y detente.
+- Si Zepol Cloud responde que el alumno llegó al límite de consultas de hoy, muéstrale ese mensaje tal cual y detente. No es un error: no lo registres con `registrar_error`.
 - Si un paso falla por un error de Meta o de Zepol Cloud, explícaselo al alumno y regístralo con `registrar_error` (`comando = diagnostico`, el paso, el código si lo hay y un mensaje corto). Nunca envíes claves, tokens, correos ni datos de clientes.
 
 ## Antes de empezar
@@ -42,7 +43,7 @@ Esta skill **solo lee**. No crea, edita ni publica nada en Meta.
 2. **Instagram**: confirma con `ads_get_ig_accounts` que la cuenta de Instagram del perfil sigue vinculada.
 3. **Píxel y API de Conversiones**: con `ads_get_dataset_details`, `ads_get_dataset_stats` y `ads_get_dataset_quality`, revisa si el píxel del perfil está activo, qué eventos recibe y si llegan eventos del servidor (API de Conversiones).
    - Si no llegan eventos del servidor, avísalo con claridad y di desde cuándo, porque puede pasar meses sin que nadie lo note.
-4. **Landing** (si el negocio vende por una web: Shopify, WooCommerce u otra): cuando el alumno indique la URL de un producto, revisa que responda (HTTP 200) y que tenga un formulario contra entrega. Mira tú qué app usa (Releasit u otra) y, si el perfil no la tiene, guárdala con `guardar_perfil` (`app_formulario`); no se la preguntes al alumno.
+4. **Landing** (si el negocio vende por una web: Shopify, WooCommerce u otra): cuando el alumno indique la URL de un producto, revisa que responda (HTTP 200) y, si vende contra entrega, que tenga un formulario contra entrega. Mira tú qué app usa (Releasit u otra) y, si el perfil no la tiene, guárdala con `guardar_perfil` (`perfil_id`, `nombre_negocio` y `app_formulario`); no se la preguntes al alumno.
    - El resto de la revisión de la landing está en la metodología (`configuracion`, canal `shopify`).
 5. **WhatsApp** (si el negocio vende por WhatsApp): recuerda que la página necesita el número de WhatsApp Business del perfil vinculado y verificado.
 
@@ -51,12 +52,14 @@ Esta skill **solo lee**. No crea, edita ni publica nada en Meta.
 1. Lee campañas, conjuntos y anuncios con `ads_get_ad_entities` (verifica cada campo con `ads_get_field_context`) y los creativos con `ads_get_creatives`.
 2. Agrupa campañas y anuncios **por producto** usando el enlace de destino de cada creativo.
 3. Para cada anuncio, guarda el ID de su publicación (`{PAGE_ID}_{POST_ID}`). Es lo que permite reutilizar un ganador con sus reacciones y comentarios (ver la skill `armado-seguro`, regla 5).
-4. Con las reglas de `optimizacion` y `creativos`, identifica por producto los conjuntos y los anuncios que dieron buen resultado. Lee solo las métricas que esas reglas usan.
+4. Por cada producto y canal, envía todos sus conjuntos del historial a `evaluar_conjuntos` con `modo = historial`, en una sola llamada: gasto, resultados, costo por resultado, días activo y, si los hay, el ROAS o el valor de las compras y el precio del producto. Si son más de 50 conjuntos, envía los 50 con más gasto. Es ganador si la `calificacion` es `bueno` o `muy_bueno`. En el diagnóstico no propongas acciones: solo lees.
+   - **Marca propia** (`categoria = marca_propia`): no califiques con `evaluar_conjuntos`, porque sus reglas son de contra entrega. Muestra los anuncios con más resultados y su ID de publicación sin llamarlos ganadores, y di que la lectura para marcas llega con su metodología.
 
 ## Paso 4. Producto a anunciar
 
+- Marca propia: salta este paso (sus campañas llegan pronto) y ve al Paso 5.
 - Pregunta qué producto quiere anunciar.
-- Con lo leído y esas reglas, explícale al alumno con sus números si el producto ya tiene ganadores para reutilizar o si es un producto nuevo.
+- Con lo leído y las calificaciones de `evaluar_conjuntos`, explícale al alumno con sus números si el producto ya tiene ganadores para reutilizar o si es un producto nuevo.
 - Si el producto ya está en el perfil (`obtener_perfil` trae los productos), usa su `id` como `producto_id` en el diagnóstico.
 
 ## Paso 5. Resultado
@@ -71,4 +74,6 @@ Esta skill **solo lee**. No crea, edita ni publica nada en Meta.
    - `productos` encontrados en el historial, con los IDs de sus campañas;
    - `ganadores` con el ID del anuncio y el de su publicación (`object_story_id`).
    - Reemplaza el diagnóstico anterior. Si la herramienta rechaza un dato, corrígelo y vuelve a enviarlo.
-3. Termina con el siguiente paso: "Siguiente paso: escribe /zepol-ads:nueva-campana para armar la campaña de tu producto."
+3. Termina con el siguiente paso:
+   - contra entrega: "Siguiente paso: escribe /zepol-ads:nueva-campana para armar la campaña de tu producto.";
+   - marca propia (`categoria = marca_propia`): "Las campañas para marcas propias llegan pronto. Mientras tanto, revisa tus campañas actuales con /zepol-ads:reporte."

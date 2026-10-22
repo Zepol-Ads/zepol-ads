@@ -21,7 +21,7 @@ Cuenta qué hay de nuevo en ZEPOL y cómo está la cuenta del alumno.
 
 ## Paso 1. Estado de la cuenta
 
-1. Llama `estado_cuenta` con `version_plugin = "0.6.0"` (la versión de este plugin).
+1. Llama `estado_cuenta` con `version_plugin = "0.6.1"` (la versión de este plugin).
 2. Muestra una tabla corta con dos columnas, "Dato" y "Estado":
    - **Licencia**: activa, inactiva o sin licencia, con su tipo (beta o compra).
    - **Novedades**: hasta qué fecha las recibe, o "de por vida".
@@ -30,7 +30,7 @@ Cuenta qué hay de nuevo en ZEPOL y cómo está la cuenta del alumno.
    - **Versión del plugin**: la instalada y, si `actualizar_plugin` es `true`, "Hay una versión nueva".
    - **Arranque**: "Hecho" si `onboarding.arranque_completo` es `true`; si no, "Falta: escribe /zepol-ads:empezar".
 3. Si la licencia no está activa, muestra el aviso de la herramienta tal cual.
-4. Si las novedades vencieron (`novedades_vigentes = false`), explica: "ZEPOL sigue funcionando, pero las funciones nuevas que salgan desde ahora no entran en tu licencia. Escríbele a Alexis para renovarlas."
+4. Si las novedades vencieron (`novedades_vigentes = false`), explica: "ZEPOL sigue funcionando, pero las funciones nuevas que salgan desde ahora no entran en tu licencia. Escríbele a Alexis por WhatsApp al +51 954 105 380 para renovarlas."
 
 ## Paso 2. Novedades
 

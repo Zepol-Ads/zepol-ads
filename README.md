@@ -6,7 +6,7 @@ Asistente para crear, publicar, medir y optimizar campañas de Meta (Facebook e 
 - Nada se publica ni gasta sin tu "sí".
 - Funciona con el conector oficial de Meta (`mcp.facebook.com/ads`) y con tu propia cuenta.
 
-Versión 0.6.0. Empieza con un solo comando: `/zepol-ads:empezar` lee lo que llenaste en la web de ZEPOL (tu negocio, tu marca y tus productos), propone el estilo de cada producto, encuentra tus activos de Meta, estudia tu cuenta y te propone tu primera campaña. Las campañas para marcas propias llegan pronto; mientras tanto, ZEPOL ya hace su diagnóstico y sus reportes. Todos los comandos usan Zepol Cloud: el perfil, los productos, la metodología, las imágenes, las recetas, los diagnósticos y los reportes viven en el servidor. Falta la prueba en vivo de punta a punta.
+Versión 0.6.1. Empieza con un solo comando: `/zepol-ads:empezar` lee lo que llenaste en la web de ZEPOL (tu negocio, tu marca y tus productos), propone el estilo de cada producto, encuentra tus activos de Meta, estudia tu cuenta y te propone tu primera campaña. Las campañas para marcas propias llegan pronto; mientras tanto, ZEPOL ya hace su diagnóstico y sus reportes. Todos los comandos usan Zepol Cloud: el perfil, los productos, la metodología, las imágenes, las recetas, los diagnósticos y los reportes viven en el servidor. Falta la prueba en vivo de punta a punta.
 
 ## Comandos
 

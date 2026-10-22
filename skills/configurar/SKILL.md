@@ -191,7 +191,7 @@ En los dos casos, todos los IDs se envían solo con números: quita `act_` y cua
 
 ## Paso 4. Guardar el perfil en Zepol Cloud
 
-1. Llama `guardar_perfil` con `nombre_negocio`, `categoria`, `nivel_anuncios` y los demás datos que tengas; en `extras`, los datos marcados así y la lista de pendientes (`extras.pendientes`); y en `branding`, los de tu marca. No envíes los datos que el alumno no sabe. `tipo_negocio` y `experiencia` se llenan solos.
+1. Llama `guardar_perfil` con `nombre_negocio`, `categoria`, `nivel_anuncios` y los demás datos que tengas (si el perfil ya existe, envía también su `perfil_id`: así se actualiza y se puede cambiar el nombre sin crear otro); en `extras`, los datos marcados así y la lista de pendientes (`extras.pendientes`); y en `branding`, los de tu marca. No envíes los datos que el alumno no sabe. `tipo_negocio` y `experiencia` se llenan solos.
 2. El perfil se identifica por `nombre_negocio`: si ya existía con ese nombre, se actualiza y lo que no envíes se conserva. Los `extras` y el `branding` se combinan con los que ya estaban guardados. Las listas (`plataformas`, `canales`, `cobros`, `por_que`, `lineas` y `tiendas`) reemplazan la lista guardada: envíalas completas.
 3. Si `guardar_perfil` responde con un error, muéstralo con qué pasó + cómo arreglarlo y ofrece corregir el dato. No reintentes en bucle. Si el error no es de un dato del alumno, regístralo con `registrar_error` (`comando = configurar`, sin claves, tokens ni datos de clientes).
 4. Confirma que quedó guardado con lo que devuelve la herramienta (el perfil con su `id`).

@@ -32,7 +32,7 @@ Antes de cada paso largo, di en una línea qué estás haciendo ("Busco tus acti
 ## Paso 1. Revisar las conexiones
 
 1. **ZEPOL.** Si no ves las herramientas de Zepol Cloud (por ejemplo `estado_cuenta`), di y detente: "ZEPOL ADS todavía no está conectado. En la app de Claude, entra a Customize → Plugins → ZEPOL ADS, abre la pestaña Conectores y toca Conectar. Inicia sesión con la cuenta de tu licencia y toca Permitir acceso. En Claude Code, escribe /mcp y autentica zepol-cloud. Después vuelve a escribir /zepol-ads:empezar."
-2. **Licencia.** Llama `estado_cuenta` con `version_plugin = "0.6.0"` (la versión de este plugin).
+2. **Licencia.** Llama `estado_cuenta` con `version_plugin = "0.6.1"` (la versión de este plugin).
    - Si la licencia no está activa, muestra el aviso de la herramienta tal cual y detente.
    - Si `versiones.actualizar_plugin` es `true`, avísalo en una línea ("Hay una versión nueva de ZEPOL: actualízala en Customize → Plugins cuando termines.") y sigue.
 3. **Meta.** Si no ves las herramientas del conector oficial de Meta (por ejemplo `ads_get_ad_accounts`), di y detente: "Falta conectar Meta. En la app de Claude, entra a Customize → Connectors, busca Meta Ads, toca Conectar y entra con tu cuenta de Facebook. En Claude Code, escribe /mcp y autentica el conector de Meta. Después vuelve a escribir /zepol-ads:empezar."
@@ -53,7 +53,7 @@ Antes de cada paso largo, di en una línea qué estás haciendo ("Busco tus acti
    - Con "Responder aquí":
      - sigue la skill `configurar`, Paso 2, solo los bloques 1 a 5. No hagas el bloque 6: los activos de Meta los encuentras tú en el Paso 3;
      - si en el bloque 1 resulta que no es contra entrega ni marca propia, `configurar` ya le explica y se detiene: tú también te detienes;
-     - después muestra su resumen y guarda con `guardar_perfil`, como en sus pasos 3 y 4;
+     - después muestra su resumen y guarda con `guardar_perfil`, como en sus pasos 3 y 4 (si el perfil ya existe, con su `perfil_id`);
      - no muestres su cierre y sigue con el punto 4.
 4. **Producto.** Los productos llegan dentro del perfil (`productos`).
    - Si hay uno, ese es el producto del arranque.
@@ -66,7 +66,7 @@ Antes de cada paso largo, di en una línea qué estás haciendo ("Busco tus acti
 
 El estilo visual de cada producto lo propones tú: con él se arman sus imágenes.
 
-1. **Marca propia:** revisa su `branding` (colores, tipografías, tono, palabras y frase). Si `obtener_perfil` trae `archivos_marca`, mira su logo y su manual con esos enlaces. Si falta algo importante (los colores o el tono), pregúntalo una sola vez, como en la skill `configurar`, bloque 4, y guárdalo con `guardar_perfil` (`branding`).
+1. **Marca propia:** revisa su `branding` (colores, tipografías, tono, palabras y frase). Si `obtener_perfil` trae `archivos_marca`, mira su logo y su manual con esos enlaces. Si falta algo importante (los colores o el tono), pregúntalo una sola vez, como en la skill `configurar`, bloque 4, y guárdalo con `guardar_perfil` (`perfil_id`, `nombre_negocio` y `branding`).
 2. **Estilo de cada producto:** por cada producto del perfil que todavía no tenga `estilo`:
    - mira sus fotos (`fotos_urls`) y, si hay, los colores de su marca o de sus fotos (`branding.colores`);
    - propón en dos o tres líneas el estilo de sus anuncios: los colores, el ambiente (dónde se ve el producto, por ejemplo "un dormitorio cálido de noche") y el tipo de foto (por ejemplo "el producto en uso, con una persona");
@@ -102,7 +102,7 @@ Si el perfil ya tiene un activo guardado y sigue siendo válido, consérvalo sin
    - El conector no lee el número de la página, así que es lo único que preguntas: "¿Cuál es el número de WhatsApp Business conectado a tu página?"
    - Valídalo y pregunta si está vinculado a la página, como en la skill `configurar`, bloque 6, punto 6.
 7. **Guardar.** Llama `guardar_perfil` con:
-   - `nombre_negocio` del perfil;
+   - `perfil_id` y `nombre_negocio` del perfil (con `perfil_id` se actualiza ese perfil y no se crea otro);
    - los IDs que encontraste;
    - en `extras`: la zona horaria y, si las hay, la lista de pendientes nuevos, sumados a `extras.pendientes`.
 
@@ -137,7 +137,7 @@ Muestra todo en una sola respuesta, con estos títulos y en palabras simples:
 
 **Contra entrega:**
 
-0. **Tasa de entrega.** Si el perfil no tiene `tasa_entrega_pct`, pregunta una sola vez: "De cada 100 pedidos contra entrega, ¿cuántos se entregan y se pagan? Me sirve para calcular cuánto te cuesta cada pedido entregado. Si no lo sabes, lo vemos en tu primer reporte." Si responde, guárdalo con `guardar_perfil` (`tasa_entrega_pct`, de 0 a 100). Si no sabe, sigue sin insistir.
+0. **Tasa de entrega.** Si el perfil no tiene `tasa_entrega_pct`, pregunta una sola vez: "De cada 100 pedidos contra entrega, ¿cuántos se entregan y se pagan? Me sirve para calcular cuánto te cuesta cada pedido entregado. Si no lo sabes, lo vemos en tu primer reporte." Si responde, guárdalo con `guardar_perfil` (`perfil_id`, `nombre_negocio` y `tasa_entrega_pct`, de 0 a 100). Si no sabe, sigue sin insistir.
 1. Pregunta: "¿Armo ahora el borrador de tu primera campaña con {producto}?" Opciones: "Armar el borrador" y "Más tarde".
    - Si no hay producto: "¿Armo ahora el borrador de tu primera campaña?"
    - Si la primera acción del Paso 5 es arreglar algo que impide anunciar, dilo antes de preguntar: "Puedo dejar el borrador listo, pero no se podrá publicar hasta que arregles {alerta}."
@@ -152,6 +152,6 @@ Muestra todo en una sola respuesta, con estos títulos y en palabras simples:
 Cierra siempre con esto, en pocas líneas:
 
 - "Listo: ZEPOL ya conoce tu negocio y tu cuenta."
-- "Cada mañana escribe /zepol-ads:optimizar. Te digo qué apagar, qué escalar y qué dejar quieto. Nada cambia sin tu sí."
+- Contra entrega: "Cada mañana escribe /zepol-ads:optimizar. Te digo qué apagar, qué escalar y qué dejar quieto. Nada cambia sin tu sí." Marca propia: no menciones optimizar (todavía usa las reglas de contra entrega).
 - "Para ver cómo van tus campañas, escribe /zepol-ads:reporte."
 - "Si algo no funciona como esperas, cuéntaselo a Alexis con /zepol-ads:feedback."

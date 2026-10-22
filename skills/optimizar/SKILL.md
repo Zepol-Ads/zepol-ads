@@ -21,14 +21,16 @@ Cada día, revisa los conjuntos activos y **propone** una acción para cada uno.
 - No calcules ni inventes acciones por tu cuenta, ni con tu propio criterio.
 - Si no ves las herramientas de Zepol Cloud (`obtener_perfil`, `evaluar_conjuntos`), ZEPOL no está conectado. Di: "ZEPOL ADS no está conectado. En la app de Claude, entra a Customize → Plugins → ZEPOL ADS, abre la pestaña Conectores y toca Conectar. En Claude Code, escribe /mcp y autentica zepol-cloud. Después vuelve a correr /zepol-ads:optimizar." y detente.
 - Si una herramienta de Zepol Cloud responde que la cuenta no tiene una licencia activa, muestra ese mensaje tal cual y detente.
+- Si Zepol Cloud responde que el alumno llegó al límite de consultas de hoy, muéstrale ese mensaje tal cual y detente. No es un error: no lo registres con `registrar_error`.
 - Si un paso falla por un error de Meta o de Zepol Cloud, explícaselo al alumno y regístralo con `registrar_error` (`comando = optimizar`, el paso, el código si lo hay y un mensaje corto). Nunca envíes claves, tokens, correos ni datos de clientes.
 
 ## Paso 0. Antes de empezar
 
-1. Llama `estado_cuenta` con `version_plugin = "0.6.0"`. Mira `onboarding.pasos`:
+1. Llama `estado_cuenta` con `version_plugin = "0.6.1"`. Mira `onboarding.pasos`:
    - si falta el perfil o la cuenta publicitaria (`perfil` o `activos_meta` en `false`), di: "Antes de optimizar falta tu arranque: escribe /zepol-ads:empezar. En unos minutos encuentra tus activos de Meta y estudia tu cuenta." y detente;
    - si solo falta el diagnóstico, sigue y, al terminar, recuerda: "Te falta el arranque: escribe /zepol-ads:empezar para que estudie tu cuenta."
 2. Llama `obtener_perfil`. Si hay varios perfiles, pregunta con qué negocio trabajas.
+   - Si el negocio es de marca propia (`categoria = marca_propia`), detente: "La optimización diaria todavía usa las reglas de contra entrega y podría proponerte apagar conjuntos que para tu marca sí son rentables. Las campañas para marcas llegan pronto. Mientras tanto, revisa tus números con /zepol-ads:reporte."
 3. Del perfil usa `meta_cuenta_publicitaria_id`. Si no está, pídele al alumno el ID de su cuenta publicitaria.
 4. Carga la skill `armado-seguro`.
 5. Trae las recetas con `listar_recetas` para saber qué campaña tiene receta (por su `meta_campaign_id`). Una campaña sin receta se optimiza igual; al final puedes ofrecer adoptarla con `/zepol-ads:verificar`.
