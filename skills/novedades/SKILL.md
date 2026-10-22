@@ -1,6 +1,6 @@
 ---
 name: novedades
-description: Muestra las novedades de ZEPOL ADS (funciones nuevas, cambios de la metodología y arreglos) y el estado de la cuenta del alumno en Zepol Cloud: licencia, hasta cuándo recibe novedades, sus créditos para imágenes, cuántas imágenes le quedan hoy y si hay una versión nueva del plugin. Úsala cuando el alumno escriba /zepol-ads:novedades o pregunte qué hay de nuevo o cómo está su cuenta.
+description: Muestra las novedades de ZEPOL ADS (funciones nuevas, cambios de la metodología y arreglos) y el estado de la cuenta del alumno en Zepol Cloud (licencia, hasta cuándo recibe novedades, sus créditos para imágenes, cuántas imágenes le quedan hoy y si hay una versión nueva del plugin). Úsala cuando el alumno escriba /zepol-ads:novedades o pregunte qué hay de nuevo o cómo está su cuenta.
 ---
 
 # Novedades y estado de la cuenta
@@ -16,12 +16,12 @@ Cuenta qué hay de nuevo en ZEPOL y cómo está la cuenta del alumno.
 
 ## Zepol Cloud
 
-- Si no ves las herramientas de Zepol Cloud (por ejemplo `estado_cuenta`), ZEPOL no está conectado. Di: "ZEPOL ADS no está conectado. En la app de Claude, entra a Customize → Plugins → ZEPOL ADS, abre la pestaña Conectores y toca Conectar. En Claude Code, escribe /mcp y autentica zepol-cloud. Después vuelve a correr /zepol-ads:novedades." y detente.
+- Si no ves las herramientas de Zepol Cloud (por ejemplo `estado_cuenta`), ZEPOL no está conectado. Di: "ZEPOL ADS no está conectado. En la app de Claude, entra a Customize (Personalizar) → Plugins → ZEPOL ADS, abre la pestaña Connectors (Conectores) y toca Connect (Conectar). En Claude Code, escribe /mcp y autentica zepol-cloud. Después vuelve a correr /zepol-ads:novedades." y detente.
 - Esta skill funciona aunque la cuenta no tenga una licencia activa.
 
 ## Paso 1. Estado de la cuenta
 
-1. Llama `estado_cuenta` con `version_plugin = "0.6.1"` (la versión de este plugin).
+1. Llama `estado_cuenta` con `version_plugin = "0.6.2"` (la versión de este plugin).
 2. Muestra una tabla corta con dos columnas, "Dato" y "Estado":
    - **Licencia**: activa, inactiva o sin licencia, con su tipo (beta o compra).
    - **Novedades**: hasta qué fecha las recibe, o "de por vida".
@@ -43,7 +43,7 @@ Cuenta qué hay de nuevo en ZEPOL y cómo está la cuenta del alumno.
 
 Si hay una versión nueva del plugin, explica cómo actualizarlo:
 
-- **En la app de Claude:** en Customize → Plugins, busca zepol-ads y actualízalo. Si tienes encendido "Sync automatically", se actualiza solo.
+- **En la app de Claude:** en Customize (Personalizar) → Plugins, busca zepol-ads y actualízalo. Si tienes encendido "Sync automatically" (sincronizar automáticamente), se actualiza solo.
 - **En Claude Code:**
 
 ```bash

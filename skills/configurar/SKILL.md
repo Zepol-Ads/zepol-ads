@@ -14,7 +14,7 @@ Lo más cómodo para el alumno es llenarlo en su bienvenida web (https://zepol-a
 
 ## Antes de empezar: conexión con Zepol Cloud
 
-- Si no ves las herramientas de Zepol Cloud (`obtener_perfil`, `guardar_perfil`), ZEPOL no está conectado. Dile al alumno: "ZEPOL ADS no está conectado. En la app de Claude, entra a Customize → Plugins → ZEPOL ADS, abre la pestaña Conectores y toca Conectar. En Claude Code, escribe /mcp y autentica zepol-cloud. Inicia sesión con la cuenta de tu licencia y vuelve a correr /zepol-ads:configurar." No sigas sin la conexión.
+- Si no ves las herramientas de Zepol Cloud (`obtener_perfil`, `guardar_perfil`), ZEPOL no está conectado. Dile al alumno: "ZEPOL ADS no está conectado. En la app de Claude, entra a Customize (Personalizar) → Plugins → ZEPOL ADS, abre la pestaña Connectors (Conectores) y toca Connect (Conectar). En Claude Code, escribe /mcp y autentica zepol-cloud. Inicia sesión con la cuenta de tu licencia y vuelve a correr /zepol-ads:configurar." No sigas sin la conexión.
 - Si una herramienta de Zepol Cloud responde que la cuenta no tiene una licencia activa, muestra ese mensaje tal cual y detente.
 
 ## Cómo le hablas al alumno
@@ -49,7 +49,7 @@ Lo más cómodo para el alumno es llenarlo en su bienvenida web (https://zepol-a
 - Si ves herramientas del conector oficial de Meta (por ejemplo, `ads_get_ad_accounts`), úsalas en el bloque 6 para ofrecer opciones.
 - Si no las ves y el alumno ya dijo que sigue a mano, no repitas el aviso y continúa.
 - Si no las ves y no lo dijo, avisa y ofrece seguir a mano:
-  - "No encuentro el conector de Meta. Conéctalo desde la sección Conectores de Claude (Meta Ads) con tu cuenta de Facebook y vuelve a correr /zepol-ads:configurar. Si prefieres, sigo ahora y te pido los datos a mano."
+  - "No encuentro el conector de Meta. En la app de Claude, entra a Customize (Personalizar) → Connectors (Conectores), busca Meta Ads, toca Connect (Conectar) y entra con tu cuenta de Facebook. En Claude Code, escribe /mcp y autentica el conector de Meta. Después vuelve a correr /zepol-ads:configurar. Si prefieres, sigo ahora y te pido los datos a mano."
   - Opciones: "Seguir a mano" y "Conectar Meta primero".
 - Si una llamada falla, explica el error con qué pasó + cómo arreglarlo y ofrece seguir a mano. No reintentes en bucle.
 
@@ -60,7 +60,7 @@ Haz los bloques en este orden. Cada pregunta indica el dato que se guarda en Zep
 No preguntes estas tres cosas, aunque el alumno las mencione:
 
 - **El precio en los anuncios:** ningún anuncio de ZEPOL muestra precio.
-- **La tasa de entrega:** la pide `/zepol-ads:reporte` cuando la necesita.
+- **La tasa de entrega:** no va en la entrevista. Se pide antes de la primera campaña (`/zepol-ads:empezar`) o en el reporte (`/zepol-ads:reporte`). Si el alumno te la da por su cuenta, guárdala en `tasa_entrega_pct` (de 1 a 100).
 - **La app del formulario contra entrega:** la ves tú al revisar la landing en `/zepol-ads:nueva-campana`.
 
 ### Bloque 1. Tu negocio
@@ -120,7 +120,7 @@ En marca propia haz todo el bloque. En contra entrega, solo el punto 3 (el tono)
 2. "¿Qué tipografías usa tu marca, para títulos y para textos?" → `branding.tipografias` (`titulos` y `textos`). "No sé" → no lo envíes.
 3. "¿Cómo le hablas a tus clientes? Elige hasta dos." → `branding.tono`: "Cercano" → `cercano`, "Premium" → `premium`, "Divertido" → `divertido`, "Técnico" → `tecnico`, "Inspirador" → `inspirador`.
 4. "¿Qué palabras usas mucho? ¿Y cuáles nunca usarías?" → `branding.palabras_si` y `branding.palabras_nunca`.
-5. "¿Tienes una frase o una promesa de marca?" → `branding.frases`.
+5. "¿Tienes frases o promesas de marca?" → `branding.frases` (lista de textos cortos, uno por frase).
 6. El logo y el manual de marca no se suben por el chat: "Tu logo y tu manual de marca se suben en tu bienvenida, en https://zepol-ad-beacon.lovable.app/bienvenida." Si el perfil ya los tiene, `obtener_perfil` trae sus enlaces en `archivos_marca`.
 
 ### Bloque 5. Pruebas sociales
@@ -176,7 +176,7 @@ En los dos casos, todos los IDs se envían solo con números: quita `act_` y cua
    - Por qué lo eligen.
    - Envíos.
    - WhatsApp: quién atiende, cuántas personas, si falta personal, herramienta y etiquetas. Omite la fila si no usa WhatsApp.
-   - Tu marca: colores, tipografías, tono, palabras y frase. En contra entrega, solo el tono.
+   - Tu marca: colores, tipografías, tono, palabras y frases. En contra entrega, solo el tono.
    - Pruebas sociales: clientes, calificación con reseñas y fuente, y recomendaciones, o "No se usan" si no están confirmadas.
    - Cuenta publicitaria, con su zona horaria.
    - Página.
@@ -192,7 +192,7 @@ En los dos casos, todos los IDs se envían solo con números: quita `act_` y cua
 ## Paso 4. Guardar el perfil en Zepol Cloud
 
 1. Llama `guardar_perfil` con `nombre_negocio`, `categoria`, `nivel_anuncios` y los demás datos que tengas (si el perfil ya existe, envía también su `perfil_id`: así se actualiza y se puede cambiar el nombre sin crear otro); en `extras`, los datos marcados así y la lista de pendientes (`extras.pendientes`); y en `branding`, los de tu marca. No envíes los datos que el alumno no sabe. `tipo_negocio` y `experiencia` se llenan solos.
-2. El perfil se identifica por `nombre_negocio`: si ya existía con ese nombre, se actualiza y lo que no envíes se conserva. Los `extras` y el `branding` se combinan con los que ya estaban guardados. Las listas (`plataformas`, `canales`, `cobros`, `por_que`, `lineas` y `tiendas`) reemplazan la lista guardada: envíalas completas.
+2. El perfil se identifica por `nombre_negocio`: si ya existía con ese nombre, se actualiza y lo que no envíes se conserva. Los `extras` y el `branding` se combinan con los que ya estaban guardados, dato por dato: cada lista del `branding` que envíes (`colores`, `tono`, `palabras_si`, `palabras_nunca` y `frases`) reemplaza a la guardada, así que envíala completa. Las listas (`plataformas`, `canales`, `cobros`, `por_que`, `lineas` y `tiendas`) reemplazan la lista guardada: envíalas completas.
 3. Si `guardar_perfil` responde con un error, muéstralo con qué pasó + cómo arreglarlo y ofrece corregir el dato. No reintentes en bucle. Si el error no es de un dato del alumno, regístralo con `registrar_error` (`comando = configurar`, sin claves, tokens ni datos de clientes).
 4. Confirma que quedó guardado con lo que devuelve la herramienta (el perfil con su `id`).
 

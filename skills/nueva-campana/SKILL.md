@@ -22,22 +22,24 @@ El recorrido completo: metodología de Zepol Cloud por etapa → `guardar_produc
 - La metodología de ZEPOL vive en Zepol Cloud, no en este plugin: estructura, objetivo, presupuestos, públicos, ubicaciones, nombres, horarios, configuración, creativos y textos.
 - Pídela con `obtener_metodologia`, por etapa (`estructura`, `configuracion`, `creativos`, `textos`) y con el canal de la campaña (`whatsapp` o `shopify`).
 - No improvises: no inventes estructuras, presupuestos, públicos, textos ni horarios con tu propio criterio. Si a las reglas les falta algo para tu caso, pregúntale al alumno.
-- Si no ves las herramientas de Zepol Cloud (por ejemplo `obtener_perfil`), ZEPOL no está conectado. Di: "ZEPOL ADS no está conectado. En la app de Claude, entra a Customize → Plugins → ZEPOL ADS, abre la pestaña Conectores y toca Conectar. En Claude Code, escribe /mcp y autentica zepol-cloud. Después vuelve a correr /zepol-ads:nueva-campana." y detente.
+- Si no ves las herramientas de Zepol Cloud (por ejemplo `obtener_perfil`), ZEPOL no está conectado. Di: "ZEPOL ADS no está conectado. En la app de Claude, entra a Customize (Personalizar) → Plugins → ZEPOL ADS, abre la pestaña Connectors (Conectores) y toca Connect (Conectar). En Claude Code, escribe /mcp y autentica zepol-cloud. Después vuelve a correr /zepol-ads:nueva-campana." y detente.
 - Si una herramienta de Zepol Cloud responde que la cuenta no tiene una licencia activa, muestra ese mensaje tal cual y detente.
 - Si un paso falla por un error de Meta o de Zepol Cloud, explícaselo al alumno y regístralo con `registrar_error` (`comando = nueva-campana`, el paso, el código si lo hay y un mensaje corto). Nunca envíes claves, tokens, correos ni datos de clientes.
 
 ## Paso 0. Antes de empezar
 
-1. Llama `estado_cuenta` con `version_plugin = "0.6.1"`. Si `onboarding.arranque_completo` es `false`, di: "Antes de armar una campaña falta tu arranque: escribe /zepol-ads:empezar. En unos minutos encuentra tus activos de Meta, estudia tu cuenta y te deja listo." y detente. Si `/zepol-ads:empezar` te trajo hasta aquí, el arranque ya está hecho.
+1. Llama `estado_cuenta` con `version_plugin = "0.6.2"`. Si `onboarding.arranque_completo` es `false`, di: "Antes de armar una campaña falta tu arranque: escribe /zepol-ads:empezar. En unos minutos encuentra tus activos de Meta, estudia tu cuenta y te deja listo." y detente. Si `/zepol-ads:empezar` te trajo hasta aquí, el arranque ya está hecho.
 2. Llama `obtener_perfil`. Si hay varios perfiles, pregunta con qué negocio trabajas.
-   - Si `categoria` es `marca_propia`, di: "Las campañas para marcas propias llegan pronto, con su propia metodología. Mientras tanto, puedo darte el reporte de tus campañas actuales con /zepol-ads:reporte y proponerte cambios con /zepol-ads:optimizar." y detente.
-3. Confirma que el conector de Meta está disponible. Si no: "No encuentro el conector de Meta. Conéctalo desde la sección Conectores de Claude y vuelve a correr /zepol-ads:nueva-campana."
+   - Si `categoria` es `marca_propia`, di: "Las campañas para marcas propias llegan pronto, con su propia metodología. Mientras tanto, puedo darte el reporte de tus campañas actuales con /zepol-ads:reporte: cuánto gastaste, cuántas ventas tuviste y cuánto te costó cada una." y detente. No le ofrezcas /zepol-ads:optimizar: todavía usa las reglas de contra entrega.
+3. Confirma que el conector de Meta está disponible. Si no: "No encuentro el conector de Meta. En la app de Claude, entra a Customize (Personalizar) → Connectors (Conectores), busca Meta Ads, toca Connect (Conectar) y entra con tu cuenta de Facebook. En Claude Code, escribe /mcp y autentica el conector de Meta. Después vuelve a correr /zepol-ads:nueva-campana."
 4. Usa el `diagnostico` del perfil (ganadores y alertas) en los pasos que lo piden.
 5. Carga la skill `armado-seguro`. Todo lo que se cree o edite en Meta sigue sus reglas, en su orden.
 
 ## Paso 1. Datos del producto
 
-Pide los datos que guarda `guardar_producto`. Si el producto ya está en el perfil (`obtener_perfil` trae los productos), muéstralo y pregunta solo lo que cambió.
+Pide los datos que guarda `guardar_producto`. Si el producto ya está en el perfil (`obtener_perfil` trae los productos), muéstralo y pregunta solo lo que cambió y lo que falta.
+
+**Sin dato no es "no".** Si `margen_bajo`, `es_complejo` o `para_personas_mayores` vienen en `null` (o no vienen), el alumno nunca los respondió. Antes de armar la campaña, pregúntale los que falten y guárdalos con `guardar_producto` (`true` o `false`). Un `false` ya es una respuesta: no lo vuelvas a preguntar. Si el alumno no sabe, no lo envíes.
 
 | Campo | Pregunta |
 |---|---|
@@ -93,7 +95,7 @@ El canal `shopify` de la metodología es la web con formulario contra entrega, s
 ## Paso 5. Creativos
 
 - **Ganadores que se reutilizan**: van por su publicación (`object_story_id` + `url_tags`), con la regla 5 de `armado-seguro`. Cuáles se reutilizan sale de la metodología (`creativos`) y del diagnóstico.
-- **Imágenes nuevas**: genéralas con `generar_imagen` (`producto_id`, `temperatura`, `angulo` y los textos), con el estilo del producto (`estilo`) en el ángulo. Usa la primera foto guardada del producto; pasa `foto_producto_url` solo si el alumno quiere otra foto. Zepol Cloud aloja cada imagen y devuelve una URL pública: súbela a la cuenta con `ads_creative_upload_media`.
+- **Imágenes nuevas**: genéralas con `generar_imagen` (`producto_id`, `temperatura`, `angulo` y los textos). En `angulo` va solo el ángulo: ZEPOL agrega solo el estilo del producto y los colores de la marca. Usa la primera foto guardada del producto; pasa `foto_producto_url` solo si el alumno quiere otra foto. Zepol Cloud aloja cada imagen y devuelve una URL pública: súbela a la cuenta con `ads_creative_upload_media`.
   - **Créditos:** cada imagen o edición usa 1 crédito de ZEPOL del alumno. Antes de generar, dile cuántas imágenes vas a crear y cuántos créditos le quedan (`estado_cuenta` → `creditos`), y pregunta si sigues. Si algo falla, el crédito vuelve solo.
   - Si `generar_imagen` dice que no le quedan créditos o que la creación de imágenes todavía no está activa, díselo y sigue con los creativos que el alumno tiene.
   - Si `generar_imagen` dice que falta la foto, vuelve al paso 1 y pide el enlace de una foto real del producto.

@@ -6,7 +6,7 @@ Asistente para crear, publicar, medir y optimizar campañas de Meta (Facebook e 
 - Nada se publica ni gasta sin tu "sí".
 - Funciona con el conector oficial de Meta (`mcp.facebook.com/ads`) y con tu propia cuenta.
 
-Versión 0.6.1. Empieza con un solo comando: `/zepol-ads:empezar` lee lo que llenaste en la web de ZEPOL (tu negocio, tu marca y tus productos), propone el estilo de cada producto, encuentra tus activos de Meta, estudia tu cuenta y te propone tu primera campaña. Las campañas para marcas propias llegan pronto; mientras tanto, ZEPOL ya hace su diagnóstico y sus reportes. Todos los comandos usan Zepol Cloud: el perfil, los productos, la metodología, las imágenes, las recetas, los diagnósticos y los reportes viven en el servidor. Falta la prueba en vivo de punta a punta.
+Versión 0.6.2. Empieza con un solo comando: `/zepol-ads:empezar` lee lo que llenaste en la web de ZEPOL (tu negocio, tu marca y tus productos), propone el estilo de cada producto, encuentra tus activos de Meta, estudia tu cuenta y te propone tu primera campaña. Las campañas para marcas propias llegan pronto; mientras tanto, ZEPOL ya hace su diagnóstico y sus reportes. Todos los comandos usan Zepol Cloud: el perfil, los productos, la metodología, las imágenes, las recetas, los diagnósticos y los reportes viven en el servidor. Falta la prueba en vivo de punta a punta.
 
 ## Comandos
 
@@ -17,8 +17,8 @@ Versión 0.6.1. Empieza con un solo comando: `/zepol-ads:empezar` lee lo que lle
 | `/zepol-ads:diagnostico` | Estudia tu cuenta (accesos, historial por producto y ganadores) y guarda el diagnóstico |
 | `/zepol-ads:nueva-campana` | Arma una campaña contra entrega a WhatsApp o a tu web como borrador, guarda su receta y la publica con tu aprobación |
 | `/zepol-ads:verificar` | Compara lo publicado contra la receta de la campaña; adopta como receta una campaña creada por tu cuenta |
-| `/zepol-ads:reporte` | Métricas y costo por pedido entregado; guarda el reporte |
-| `/zepol-ads:optimizar` | Propone acciones diarias, no aplica nada sin tu aprobación y guarda lo que se decidió |
+| `/zepol-ads:reporte` | Métricas y costo por pedido entregado (en marcas propias: ventas, costo por venta y ROAS); guarda el reporte |
+| `/zepol-ads:optimizar` | Contra entrega: propone acciones diarias, no aplica nada sin tu aprobación y guarda lo que se decidió |
 | `/zepol-ads:limpiar` | Marca borradores obsoletos y reconstruye desde la receta |
 | `/zepol-ads:feedback` | Le envía a Alexis tu comentario, una idea o un problema |
 | `/zepol-ads:novedades` | Novedades de ZEPOL y el estado de tu cuenta (licencia, créditos, imágenes y versión) |
@@ -41,10 +41,12 @@ Sí están aquí las reglas técnicas de seguridad del conector de Meta (`skills
 
 **En la app de Claude:**
 
-1. Entra a Customize → Plugins → Add → Add marketplace, pega `Zepol-Ads/zepol-ads` y toca Add.
-2. Instala **zepol-ads** y enciende "Sync automatically" para recibir las actualizaciones.
-3. En el plugin, abre la pestaña Conectores, toca **Conectar** en ZEPOL ADS y luego **Permitir acceso** con la cuenta de tu licencia.
-4. En Customize → Connectors, conecta **Meta Ads** con tu cuenta de Facebook.
+Los menús de la app de Claude están en inglés: entre paréntesis va lo que significan.
+
+1. Entra a Customize (Personalizar) → Plugins → Add → Add marketplace. Pega esta dirección: `Zepol-Ads/zepol-ads` y toca Add.
+2. Instala **zepol-ads** y enciende "Sync automatically" (sincronizar automáticamente) para recibir las actualizaciones.
+3. En el plugin, abre la pestaña Connectors (Conectores) y toca **Connect** (Conectar) en ZEPOL ADS. Se abre la web de ZEPOL: entra con la cuenta de tu licencia y toca **Permitir acceso**.
+4. En Customize → Connectors, busca **Meta Ads**, toca **Connect** y entra con tu cuenta de Facebook.
 
 **En Claude Code:**
 
@@ -64,7 +66,7 @@ Para probar sin instalar, desde una copia local: `claude --plugin-dir ./plugin`.
 
 En Zepol Cloud, el servidor de ZEPOL, con la cuenta de tu licencia: perfil del negocio (con su diagnóstico), productos (con sus fotos), recetas de campaña, reportes, creativos y pedidos de WhatsApp. Cada alumno solo ve sus propios datos. El plugin no guarda archivos locales.
 
-Ningún dato guarda contraseñas, claves ni tokens. Las imágenes con IA usan los créditos de ZEPOL de tu plan: no necesitas ninguna clave.
+Ningún dato guarda contraseñas, claves ni tokens. Las imágenes con IA usan los créditos de ZEPOL que trae tu licencia: no necesitas ninguna clave.
 
 ## Servidor de ZEPOL
 
@@ -92,7 +94,7 @@ Las skills marcan cada pendiente en el texto:
 
 Fuera de las skills:
 
-- URL pública del repositorio, licencia y correo de contacto en `plugin.json`.
+- URL pública del repositorio, licencia del código (campo `license`) y correo de contacto en `plugin.json`.
 - Segundo marketplace estable (`zepol-ads`) para la venta.
 - Al subir la versión, cámbiala en `plugin.json`, en `marketplace.json` y en el `version_plugin` que las skills envían a `estado_cuenta` (`empezar`, `novedades`, `nueva-campana`, `optimizar`, `reporte`, `verificar` y `limpiar`).
 - `empezar` enlaza a la bienvenida del panel en `zepol-ad-beacon.lovable.app`: cámbialo cuando el panel pase a `zepolads.com`.

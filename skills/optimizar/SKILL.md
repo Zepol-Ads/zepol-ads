@@ -1,6 +1,6 @@
 ---
 name: optimizar
-description: Revisión diaria de las campañas activas con ZEPOL ADS. Lee los resultados de cada conjunto en Meta, le pide a Zepol Cloud la acción recomendada para cada uno (evaluar_conjuntos) y la propone al alumno en una tabla. Nunca aplica nada sin aprobación explícita. Úsala cuando el alumno escriba /zepol-ads:optimizar o pida revisar, escalar, apagar o ajustar presupuestos de sus campañas.
+description: Revisión diaria de las campañas activas con ZEPOL ADS, por ahora para negocios contra entrega (a una marca propia la manda a /zepol-ads:reporte). Lee los resultados de cada conjunto en Meta, le pide a Zepol Cloud la acción recomendada para cada uno (evaluar_conjuntos) y la propone al alumno en una tabla. Nunca aplica nada sin aprobación explícita. Úsala cuando el alumno escriba /zepol-ads:optimizar o pida revisar, escalar, apagar o ajustar presupuestos de sus campañas.
 ---
 
 # Optimizar campañas
@@ -19,14 +19,14 @@ Cada día, revisa los conjuntos activos y **propone** una acción para cada uno.
 - Las reglas de optimización de ZEPOL viven en Zepol Cloud, no en este plugin: cuándo apagar, cuándo mantener, cuánto subir o bajar y cuándo preguntar al alumno.
 - Las acciones las calcula la herramienta `evaluar_conjuntos`. La explicación de las reglas la entrega `obtener_metodologia` con `etapa = optimizacion`.
 - No calcules ni inventes acciones por tu cuenta, ni con tu propio criterio.
-- Si no ves las herramientas de Zepol Cloud (`obtener_perfil`, `evaluar_conjuntos`), ZEPOL no está conectado. Di: "ZEPOL ADS no está conectado. En la app de Claude, entra a Customize → Plugins → ZEPOL ADS, abre la pestaña Conectores y toca Conectar. En Claude Code, escribe /mcp y autentica zepol-cloud. Después vuelve a correr /zepol-ads:optimizar." y detente.
+- Si no ves las herramientas de Zepol Cloud (`obtener_perfil`, `evaluar_conjuntos`), ZEPOL no está conectado. Di: "ZEPOL ADS no está conectado. En la app de Claude, entra a Customize (Personalizar) → Plugins → ZEPOL ADS, abre la pestaña Connectors (Conectores) y toca Connect (Conectar). En Claude Code, escribe /mcp y autentica zepol-cloud. Después vuelve a correr /zepol-ads:optimizar." y detente.
 - Si una herramienta de Zepol Cloud responde que la cuenta no tiene una licencia activa, muestra ese mensaje tal cual y detente.
 - Si Zepol Cloud responde que el alumno llegó al límite de consultas de hoy, muéstrale ese mensaje tal cual y detente. No es un error: no lo registres con `registrar_error`.
 - Si un paso falla por un error de Meta o de Zepol Cloud, explícaselo al alumno y regístralo con `registrar_error` (`comando = optimizar`, el paso, el código si lo hay y un mensaje corto). Nunca envíes claves, tokens, correos ni datos de clientes.
 
 ## Paso 0. Antes de empezar
 
-1. Llama `estado_cuenta` con `version_plugin = "0.6.1"`. Mira `onboarding.pasos`:
+1. Llama `estado_cuenta` con `version_plugin = "0.6.2"`. Mira `onboarding.pasos`:
    - si falta el perfil o la cuenta publicitaria (`perfil` o `activos_meta` en `false`), di: "Antes de optimizar falta tu arranque: escribe /zepol-ads:empezar. En unos minutos encuentra tus activos de Meta y estudia tu cuenta." y detente;
    - si solo falta el diagnóstico, sigue y, al terminar, recuerda: "Te falta el arranque: escribe /zepol-ads:empezar para que estudie tu cuenta."
 2. Llama `obtener_perfil`. Si hay varios perfiles, pregunta con qué negocio trabajas.
@@ -87,7 +87,7 @@ Solo lo que el alumno aprobó, con las reglas de `armado-seguro`:
 
 1. Candado del editor antes de cambiar nada (regla 1).
 2. Apagar: `ads_update_entity` con solo `{"status":"PAUSED"}`. No llames `ads_activate_entity` después (regla 10).
-3. Cambiar un presupuesto: `ads_update_entity` con `daily_budget` en céntimos (S/25 = `2500`). El cambio queda en borrador (`is_draft=true`):
+3. Cambiar un presupuesto: `ads_update_entity` con `daily_budget` en céntimos (los soles por 100). El cambio queda en borrador (`is_draft=true`):
    - muestra el cambio pendiente;
    - publícalo con `ads_activate_entity`, con solo ese conjunto en `object_ids` y `publish_as_active=false`, únicamente con el "sí" del alumno a esa publicación.
 4. Verifica cada cambio leyendo el objeto publicado con `ads_get_ad_entities`. Si no se ve el cambio, di que está pendiente; no lo des por hecho.

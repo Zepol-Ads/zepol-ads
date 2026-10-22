@@ -1,38 +1,45 @@
 ---
 name: reporte
-description: Lee las métricas de Meta de las campañas del alumno por campaña, conjunto y anuncio, pide a Zepol Cloud la lectura de esos números (evaluar_conjuntos), calcula el costo por pedido entregado (con la tasa de entrega del perfil o los pedidos de WhatsApp registrados) y guarda el reporte en Zepol Cloud. No cambia nada en Meta. Úsala cuando el alumno escriba /zepol-ads:reporte o pregunte cómo van sus campañas.
+description: Lee las métricas de Meta de las campañas del alumno por campaña, conjunto y anuncio y guarda el reporte en Zepol Cloud. En contra entrega, pide a Zepol Cloud la lectura de esos números (evaluar_conjuntos) y calcula el costo por pedido entregado (con la tasa de entrega del perfil o los pedidos de WhatsApp registrados). En una marca propia, muestra el gasto, las ventas, el costo por venta y el ROAS sin calificarlos. No cambia nada en Meta. Úsala cuando el alumno escriba /zepol-ads:reporte o pregunte cómo van sus campañas.
 ---
 
 # Reporte de campañas
 
-Lee los números de Meta y los traduce a lo que importa en contra entrega: cuánto cuesta cada pedido que sí se entrega.
+Lee los números de Meta y los traduce a lo que importa en el negocio del alumno:
 
-Esta skill **no cambia nada en Meta**: solo lee los números y guarda el reporte en Zepol Cloud. Para proponer cambios está `/zepol-ads:optimizar`.
+- **Contra entrega:** cuánto cuesta cada pedido que sí se entrega.
+- **Marca propia:** cuánto gastó, cuántas ventas tuvo, cuánto le costó cada venta y cuánto le devolvió cada sol invertido (ROAS).
+
+Esta skill **no cambia nada en Meta**: solo lee los números y guarda el reporte en Zepol Cloud. En contra entrega, para proponer cambios está `/zepol-ads:optimizar`.
 
 ## Cómo le hablas al alumno
 
 - Español neutro de LATAM, tuteando. Sin voseo, sin "usted" y sin emojis.
 - Directo y concreto, en primera persona del singular ("Reviso tus números"), nunca "nosotros".
-- Montos en soles con el formato S/10.50. Separador visual: punto medio con espacios.
+- Montos en soles con el formato S/12.50. Separador visual: punto medio con espacios.
 - Errores con la forma qué pasó + cómo arreglarlo.
 
 ## Metodología: siempre de Zepol Cloud
 
 - Qué es un buen o un mal resultado vive en Zepol Cloud, no en este plugin. La lectura de cada conjunto la entrega `evaluar_conjuntos`, y la explicación de las reglas, `obtener_metodologia` con `etapa = optimizacion`.
 - No califiques los números con tu propio criterio.
-- Si no ves las herramientas de Zepol Cloud (`obtener_perfil`, `evaluar_conjuntos`), muestra los números sin calificarlos y di: "ZEPOL ADS no está conectado, así que te muestro tus números sin evaluarlos. En la app de Claude, conéctalo en Customize → Plugins → ZEPOL ADS, pestaña Conectores; en Claude Code, escribe /mcp y autentica zepol-cloud."
+- Si no ves las herramientas de Zepol Cloud (`obtener_perfil`, `evaluar_conjuntos`), muestra los números sin calificarlos y di: "ZEPOL ADS no está conectado, así que te muestro tus números sin evaluarlos. En la app de Claude, conéctalo en Customize (Personalizar) → Plugins → ZEPOL ADS, pestaña Connectors (Conectores), con Connect (Conectar); en Claude Code, escribe /mcp y autentica zepol-cloud."
 - Si una herramienta de Zepol Cloud responde que la cuenta no tiene una licencia activa, muestra ese mensaje tal cual y detente.
 - Si Zepol Cloud responde que el alumno llegó al límite de consultas de hoy, muéstrale ese mensaje tal cual y detente. No es un error: no lo registres con `registrar_error`.
 - Si un paso falla por un error de Meta o de Zepol Cloud, explícaselo al alumno y regístralo con `registrar_error` (`comando = reporte`, el paso, el código si lo hay y un mensaje corto). Nunca envíes claves, tokens, correos ni datos de clientes.
 
 ## Paso 0. Antes de empezar
 
-1. Llama `estado_cuenta` con `version_plugin = "0.6.1"`. Mira `onboarding.pasos`:
+1. Llama `estado_cuenta` con `version_plugin = "0.6.2"`. Mira `onboarding.pasos`:
    - si falta el perfil o la cuenta publicitaria (`perfil` o `activos_meta` en `false`), di: "Antes del reporte falta tu arranque: escribe /zepol-ads:empezar. En unos minutos encuentra tus activos de Meta y estudia tu cuenta." y detente;
    - si solo falta el diagnóstico, sigue y, al terminar, recuerda: "Te falta el arranque: escribe /zepol-ads:empezar para que estudie tu cuenta."
 2. Llama `obtener_perfil`. Si hay varios perfiles, pregunta con qué negocio trabajas.
 3. Del perfil usa `meta_cuenta_publicitaria_id` y `tasa_entrega_pct`.
-   - **Marca propia** (`categoria = marca_propia`): las reglas de lectura de ZEPOL son de contra entrega y la metodología de marcas llega pronto. Muestra los números de Meta (gasto, ventas, costo por venta y ROAS) sin calificarlos: no llames `evaluar_conjuntos` (Paso 2), no pidas ni uses la tasa de entrega (Paso 3) y dilo: "La lectura con el método de ZEPOL para marcas llega pronto: por ahora te muestro tus números tal cual."
+   - **Marca propia** (`categoria = marca_propia`): las reglas de lectura de ZEPOL son de contra entrega y la metodología de marcas llega pronto. Haz el reporte de marca:
+     - no llames `evaluar_conjuntos` (salta el Paso 2) ni califiques los números, y dilo una vez: "La lectura con el método de ZEPOL para marcas llega pronto: por ahora te muestro tus números tal cual.";
+     - muestra el gasto, las ventas (las compras que mide Meta), el costo por venta (gasto ÷ ventas) y el ROAS (`purchase_roas`, o el valor de las compras ÷ el gasto);
+     - en las campañas a WhatsApp, Meta mide conversaciones, no ventas: muestra las conversaciones y su costo, y las ventas solo si el alumno te las dice;
+     - la tasa de entrega solo aplica si la marca también cobra contra entrega (`cobros` incluye `contra_entrega`): en ese caso sigue el Paso 3, sin la estimación de `evaluar_conjuntos`. Si no cobra contra entrega, salta el Paso 3: no pidas ni uses la tasa de entrega.
 
 4. Si el alumno no dijo qué campaña ni qué periodo revisar, pregunta. Por defecto: las campañas activas, desde su inicio hasta ayer, en la zona horaria de la cuenta.
 5. Busca la receta de cada campaña con `listar_recetas` (por su `meta_campaign_id`). Si una campaña no tiene receta, el reporte se guarda igual, sin `receta_id`.
@@ -56,7 +63,7 @@ Esta skill **no cambia nada en Meta**: solo lee los números y guarda el reporte
 2. Llama `evaluar_conjuntos`. Aquí solo sirve como lectura: no ofrezcas aplicar nada.
 3. De cada resultado usa la calificación, el ROAS, el costo por pedido estimado y el motivo.
 
-## Paso 3. Costo por pedido entregado
+## Paso 3. Costo por pedido entregado (contra entrega)
 
 - **Ventas por web**: costo por pedido entregado = gasto ÷ (compras × tasa de entrega).
   - La tasa de entrega es `tasa_entrega_pct` del perfil, como fracción (55 % → 0.55).
@@ -67,13 +74,13 @@ Esta skill **no cambia nada en Meta**: solo lee los números y guarda el reporte
   - Con los pedidos entregados, costo por pedido entregado = gasto ÷ pedidos entregados.
   - Si no, usa el `costo_por_pedido_estimado` de `evaluar_conjuntos` y divídelo entre la tasa de entrega. Dilo claro: "Es una estimación".
 - Si el perfil no tiene tasa de entrega, pídela aquí, una sola vez: "De cada 100 pedidos contra entrega, ¿cuántos se entregan y se pagan? Con eso calculo cuánto te cuesta cada pedido entregado."
-  - Si responde, guárdala con `guardar_perfil` (`perfil_id`, `nombre_negocio` y `tasa_entrega_pct`, de 0 a 100) y úsala. Si responde con pedidos totales (por ejemplo, "de 200 se entregan 110"), conviértelo a porcentaje y confírmalo.
+  - Si responde, guárdala con `guardar_perfil` (`perfil_id`, `nombre_negocio` y `tasa_entrega_pct`, de 1 a 100) y úsala. Si responde con pedidos totales (por ejemplo, "de 200 se entregan 110"), conviértelo a porcentaje y confírmalo.
   - Si no la sabe, muestra el resto del reporte sin el costo por pedido entregado y dile: "Cuando sepas tu tasa de entrega, dímela y la uso en tu siguiente reporte."
 
 ## Paso 4. Mostrar el reporte
 
-1. Resumen en 2 o 3 líneas: gasto total, resultados, pedidos y costo por pedido entregado.
-2. Tabla por conjunto: gasto, resultados, costo por resultado, ROAS si aplica, costo por pedido entregado y la lectura de ZEPOL en palabras simples.
+1. Resumen en 2 o 3 líneas: gasto total, resultados, pedidos y costo por pedido entregado. En marca propia: gasto total, ventas, costo por venta y ROAS (y el costo por pedido entregado, si cobra contra entrega).
+2. Tabla por conjunto: gasto, resultados, costo por resultado, ROAS si aplica, costo por pedido entregado y la lectura de ZEPOL en palabras simples. En marca propia, sin la lectura de ZEPOL.
 3. Tabla por anuncio: gasto, resultados, costo por resultado y CTR. Marca los anuncios que más y menos rinden.
 4. Si la tendencia o las alertas de Meta explican algo, dilo en una o dos líneas.
 
@@ -82,9 +89,9 @@ Esta skill **no cambia nada en Meta**: solo lee los números y guarda el reporte
 Guarda un reporte por campaña con `guardar_reporte`, con el formato que trae la herramienta:
 
 - `origen = reporte`, el `perfil_id`, el `receta_id` si la campaña tiene receta y el periodo (`fecha_desde`, `fecha_hasta`);
-- los totales de la campaña: gasto, resultados, costo por resultado, ROAS si aplica y costo por pedido entregado;
-- en `metricas`: la campaña con su ID de Meta, el canal, la tabla por conjunto (con la lectura de ZEPOL), la tabla por anuncio, los pedidos entregados con su fuente (`registro`, `alumno` o `estimacion`), la tasa de entrega usada y lo que explicaron la tendencia y las alertas de Meta.
+- los totales de la campaña: gasto, resultados, costo por resultado, ROAS si aplica y costo por pedido entregado (en marca propia, el costo por resultado es el costo por venta y el costo por pedido entregado va solo si cobra contra entrega);
+- en `metricas`: la campaña con su ID de Meta, el canal, la tabla por conjunto (con la lectura de ZEPOL), la tabla por anuncio, los pedidos entregados con su fuente (`registro`, `alumno` o `estimacion`), la tasa de entrega usada (en `tasa_entrega_pct`, como porcentaje: 55, no 0.55) y lo que explicaron la tendencia y las alertas de Meta.
 
 Si la herramienta rechaza un dato, corrígelo y vuelve a enviarlo. Confirma en una línea: "Guardé este reporte en ZEPOL."
 
-Si hay algo para cambiar, termina con: "Si quieres que proponga cambios, corre /zepol-ads:optimizar."
+En contra entrega, si hay algo para cambiar, termina con: "Si quieres que proponga cambios, corre /zepol-ads:optimizar." En marca propia no ofrezcas /zepol-ads:optimizar: todavía usa las reglas de contra entrega.

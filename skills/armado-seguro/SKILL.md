@@ -35,7 +35,7 @@ La estructura, los presupuestos, los públicos, los textos, los creativos y los 
   - "Antes de hacer cambios, cierra el editor del Administrador de anuncios si lo tienes abierto. Si queda abierto, puede guardar su versión encima y borrar los anuncios. Avísame cuando lo cierres."
 - **Después** de editar, pide que refresque antes de abrirlo:
   - "Listo. Si vas a abrir la campaña en el Administrador, refresca la página primero."
-- **Por qué**: el 16 de octubre de 2026 se cambiaron presupuestos por el conector con el editor abierto. Un minuto después, el editor guardó su propia versión del borrador: borró los creativos de los 15 anuncios y el píxel de los 3 conjuntos, y puso como inicio "ahora".
+- **Por qué**: el 16 de octubre de 2026 se cambiaron presupuestos por el conector con el editor abierto. Un minuto después, el editor guardó su propia versión del borrador: borró los creativos de todos los anuncios y el píxel de todos los conjuntos, y puso como inicio "ahora".
 - **Si ya pasó**: no parches. Reconstruye desde cero con la receta de la campaña, porque los creativos no se pueden editar por el conector. Marca lo dañado con la regla 9.
 - Cada vez que pidas al alumno abrir algo en el Administrador para revisarlo (reglas 3 y 8), recuérdale cerrarlo antes del siguiente cambio.
 
@@ -179,7 +179,7 @@ No hay certeza de qué nombre de la API apaga "Lo más destacado del sitio web".
 }
 ```
 
-- Declaración de IA (`self_ai_disclosure`): no la decidas tú. La recomendación sale de la metodología (`obtener_metodologia`, etapa `configuracion`); muéstrasela al alumno y que él elija. No se puede cambiar después de crear el creativo.
+- Declaración de IA (`self_ai_disclosure`): no la decidas tú ni se la preguntes al alumno. Ya está decidida en la metodología (`obtener_metodologia`, etapa `configuracion`, entre sus ajustes fijos): aplica ese valor en cada creativo tal cual. Solo si la metodología no lo trae, pregúntaselo al alumno. No se puede cambiar después de crear el creativo.
 - TODO(prueba): anuncios de imagen a WhatsApp. El botón es `WHATSAPP_MESSAGE` y no lleva enlace web (ver regla 12). Confirmar en la primera prueba si se arma en línea igual que este formato o con `ads_create_creative`.
 
 ## 5. Reutilizar ganadores: object_story_id + url_tags
@@ -257,7 +257,7 @@ No hay certeza de qué nombre de la API apaga "Lo más destacado del sitio web".
 - **Cambios en objetos ya publicados** (por ejemplo, desde `/zepol-ads:optimizar`):
   - Pausar: `ads_update_entity` con solo `{"status":"PAUSED"}`. Cambia el objeto publicado al instante (`is_draft=false`). No llames `ads_activate_entity` después, porque puede deshacer la pausa.
   - Otros cambios, como un presupuesto, quedan en borrador (`is_draft=true`). Se publican con `ads_activate_entity`, con solo ese objeto en `object_ids` y `publish_as_active=false`, y solo con el "sí" del alumno.
-  - Los presupuestos van en céntimos: S/25 por día es `2500`.
+  - Los presupuestos van en céntimos: multiplica los soles por 100 (S/1 es `100`).
 
 ## 11. Verificación después de publicar
 
@@ -273,7 +273,7 @@ Si falta algo o no coincide:
 
 - Muéstralo en concreto, por ejemplo: "Falta el anuncio IMG 1 en el conjunto 3."
 - Ofrece recrear solo lo que falta, con estas mismas reglas y con aprobación. Antes, confirma que de verdad no existe (regla 9).
-- En la prueba real, esta verificación detectó un anuncio de imagen que faltaba en el tercer conjunto.
+- En la prueba real, esta verificación detectó un anuncio de imagen que faltaba en uno de los conjuntos.
 
 ## 12. Otros datos técnicos del conector
 
