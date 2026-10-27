@@ -6,7 +6,7 @@ Asistente para crear, publicar, medir y optimizar campañas de Meta (Facebook e 
 - Nada se publica ni gasta sin tu "sí".
 - Funciona con el conector oficial de Meta (`mcp.facebook.com/ads`) y con tu propia cuenta.
 
-Versión 0.6.2. Empieza con un solo comando: `/zepol-ads:empezar` lee lo que llenaste en la web de ZEPOL (tu negocio, tu marca y tus productos), propone el estilo de cada producto, encuentra tus activos de Meta, estudia tu cuenta y te propone tu primera campaña. Las campañas para marcas propias llegan pronto; mientras tanto, ZEPOL ya hace su diagnóstico y sus reportes. Todos los comandos usan Zepol Cloud: el perfil, los productos, la metodología, las imágenes, las recetas, los diagnósticos y los reportes viven en el servidor. Falta la prueba en vivo de punta a punta.
+Versión 0.6.3. Empieza con un solo comando: `/zepol-ads:empezar` lee lo que llenaste en la web de ZEPOL (tu negocio, tu marca y tus productos), propone el estilo de cada producto, encuentra tus activos de Meta, estudia tu cuenta y te propone tu primera campaña. Las campañas para marcas propias llegan pronto; mientras tanto, ZEPOL ya hace su diagnóstico y sus reportes. Todos los comandos usan Zepol Cloud: el perfil, los productos, la metodología, las imágenes, las recetas, los diagnósticos y los reportes viven en el servidor. Falta la prueba en vivo de punta a punta.
 
 ## Comandos
 
@@ -97,7 +97,7 @@ Fuera de las skills:
 - URL pública del repositorio, licencia del código (campo `license`) y correo de contacto en `plugin.json`.
 - Segundo marketplace estable (`zepol-ads`) para la venta.
 - Al subir la versión, cámbiala en `plugin.json`, en `marketplace.json` y en el `version_plugin` que las skills envían a `estado_cuenta` (`empezar`, `novedades`, `nueva-campana`, `optimizar`, `reporte`, `verificar` y `limpiar`).
-- `empezar` enlaza a la bienvenida del panel en `zepol-ad-beacon.lovable.app`: cámbialo cuando el panel pase a `zepolads.com`.
+- `empezar` enlaza a la bienvenida del panel en `zepol-ai-ads.lovable.app`: cámbialo cuando el panel pase a `zepolads.com`.
 - Probar si el conector de Meta (`https://mcp.facebook.com/ads`) puede venir dentro del plugin: pide el ID de la app de Meta, así que no está comprobado.
 - Guía de instalación para Windows y para la app de Claude.
 - Permisos: un plugin no puede traer reglas de permiso, así que la guía de instalación debe explicar qué herramientas de lectura aprobar de una vez.

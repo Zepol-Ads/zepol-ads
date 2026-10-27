@@ -32,7 +32,7 @@ Antes de cada paso largo, di en una línea qué estás haciendo ("Busco tus acti
 ## Paso 1. Revisar las conexiones
 
 1. **ZEPOL.** Si no ves las herramientas de Zepol Cloud (por ejemplo `estado_cuenta`), di y detente: "ZEPOL ADS todavía no está conectado. En la app de Claude, entra a Customize (Personalizar) → Plugins → ZEPOL ADS, abre la pestaña Connectors (Conectores) y toca Connect (Conectar). Se abre la web de ZEPOL: inicia sesión con la cuenta de tu licencia y toca Permitir acceso. En Claude Code, escribe /mcp y autentica zepol-cloud. Después vuelve a escribir /zepol-ads:empezar."
-2. **Licencia.** Llama `estado_cuenta` con `version_plugin = "0.6.2"` (la versión de este plugin).
+2. **Licencia.** Llama `estado_cuenta` con `version_plugin = "0.6.3"` (la versión de este plugin).
    - Si la licencia no está activa, muestra el aviso de la herramienta tal cual y detente.
    - Si `versiones.actualizar_plugin` es `true`, avísalo en una línea ("Hay una versión nueva de ZEPOL: actualízala en Customize (Personalizar) → Plugins cuando termines.") y sigue.
 3. **Meta.** Si no ves las herramientas del conector oficial de Meta (por ejemplo `ads_get_ad_accounts`), di y detente: "Falta conectar Meta. En la app de Claude, entra a Customize (Personalizar) → Connectors (Conectores), busca Meta Ads, toca Connect (Conectar) y entra con tu cuenta de Facebook. En Claude Code, escribe /mcp y autentica el conector de Meta. Después vuelve a escribir /zepol-ads:empezar."
@@ -47,7 +47,7 @@ Antes de cada paso largo, di en una línea qué estás haciendo ("Busco tus acti
 1. Llama `obtener_perfil` sin parámetros.
 2. Si hay varios perfiles, pregunta una vez con qué negocio empiezas.
 3. **Sin perfil:**
-   - Di: "No veo los datos de tu negocio. Lo más cómodo es llenarlos en la web, con botones, en https://zepol-ad-beacon.lovable.app/bienvenida: pegas el link de tu tienda y casi todo se llena solo. Toma unos 5 minutos. Si prefieres, te hago las preguntas aquí."
+   - Di: "No veo los datos de tu negocio. Lo más cómodo es llenarlos en la web, con botones, en https://zepol-ai-ads.lovable.app/bienvenida: pegas el link de tu tienda y casi todo se llena solo. Toma unos 5 minutos. Si prefieres, te hago las preguntas aquí."
    - Opciones: "Responder aquí" y "Llenarlo en la web".
    - Con "Llenarlo en la web": "Cuando termines, vuelve aquí y escribe /zepol-ads:empezar." Detente.
    - Con "Responder aquí":

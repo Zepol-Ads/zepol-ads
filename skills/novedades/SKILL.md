@@ -21,7 +21,7 @@ Cuenta qué hay de nuevo en ZEPOL y cómo está la cuenta del alumno.
 
 ## Paso 1. Estado de la cuenta
 
-1. Llama `estado_cuenta` con `version_plugin = "0.6.2"` (la versión de este plugin).
+1. Llama `estado_cuenta` con `version_plugin = "0.6.3"` (la versión de este plugin).
 2. Muestra una tabla corta con dos columnas, "Dato" y "Estado":
    - **Licencia**: activa, inactiva o sin licencia, con su tipo (beta o compra).
    - **Novedades**: hasta qué fecha las recibe, o "de por vida".

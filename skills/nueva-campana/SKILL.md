@@ -28,7 +28,7 @@ El recorrido completo: metodología de Zepol Cloud por etapa → `guardar_produc
 
 ## Paso 0. Antes de empezar
 
-1. Llama `estado_cuenta` con `version_plugin = "0.6.2"`. Si `onboarding.arranque_completo` es `false`, di: "Antes de armar una campaña falta tu arranque: escribe /zepol-ads:empezar. En unos minutos encuentra tus activos de Meta, estudia tu cuenta y te deja listo." y detente. Si `/zepol-ads:empezar` te trajo hasta aquí, el arranque ya está hecho.
+1. Llama `estado_cuenta` con `version_plugin = "0.6.3"`. Si `onboarding.arranque_completo` es `false`, di: "Antes de armar una campaña falta tu arranque: escribe /zepol-ads:empezar. En unos minutos encuentra tus activos de Meta, estudia tu cuenta y te deja listo." y detente. Si `/zepol-ads:empezar` te trajo hasta aquí, el arranque ya está hecho.
 2. Llama `obtener_perfil`. Si hay varios perfiles, pregunta con qué negocio trabajas.
    - Si `categoria` es `marca_propia`, di: "Las campañas para marcas propias llegan pronto, con su propia metodología. Mientras tanto, puedo darte el reporte de tus campañas actuales con /zepol-ads:reporte: cuánto gastaste, cuántas ventas tuviste y cuánto te costó cada una." y detente. No le ofrezcas /zepol-ads:optimizar: todavía usa las reglas de contra entrega.
 3. Confirma que el conector de Meta está disponible. Si no: "No encuentro el conector de Meta. En la app de Claude, entra a Customize (Personalizar) → Connectors (Conectores), busca Meta Ads, toca Connect (Conectar) y entra con tu cuenta de Facebook. En Claude Code, escribe /mcp y autentica el conector de Meta. Después vuelve a correr /zepol-ads:nueva-campana."

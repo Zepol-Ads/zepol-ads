@@ -9,7 +9,7 @@
     {
       "name": "zepol-ads",
       "description": "Asistente para campañas de Meta para negocios contra entrega y marcas propias en Perú, a WhatsApp o a tu web. Todo se crea como borrador y nada se publica sin tu aprobación.",
-      "version": "0.6.2",
+      "version": "0.6.3",
       "author": {
         "name": "Alexis López"
       },

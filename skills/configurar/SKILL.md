@@ -7,7 +7,7 @@ description: Crea o actualiza el perfil del negocio de ZEPOL ADS (contra entrega
 
 Esta skill arma el perfil del negocio una sola vez. Las demás skills de ZEPOL lo leen desde Zepol Cloud y lo aplican en cada campaña sin volver a preguntar.
 
-Lo más cómodo para el alumno es llenarlo en su bienvenida web (https://zepol-ad-beacon.lovable.app/bienvenida): ZEPOL lee su tienda y casi todo se llena solo. Esta entrevista sirve para hacerlo en el chat o para cambiar un dato.
+Lo más cómodo para el alumno es llenarlo en su bienvenida web (https://zepol-ai-ads.lovable.app/bienvenida): ZEPOL lee su tienda y casi todo se llena solo. Esta entrevista sirve para hacerlo en el chat o para cambiar un dato.
 
 - El perfil se guarda en Zepol Cloud con la herramienta `guardar_perfil` y se lee con `obtener_perfil`. No se guarda ningún archivo local.
 - Los datos por producto no se piden aquí: los pide `/zepol-ads:nueva-campana` para cada producto.
@@ -68,7 +68,7 @@ No preguntes estas tres cosas, aunque el alumno las mencione:
 1. "¿Qué tipo de negocio tienes?" → `categoria`
    - "Vendo productos contra entrega" → `contra_entrega`
    - "Tengo una marca propia" → `marca_propia`
-   - Si es otro tipo (un servicio con local, algo digital, una tienda con varias marcas o una agencia): "Por ahora ZEPOL está hecho para contra entrega y marcas propias. Los demás tipos llegan pronto: anótate en la lista de espera desde tu bienvenida, en https://zepol-ad-beacon.lovable.app/bienvenida." y detente.
+   - Si es otro tipo (un servicio con local, algo digital, una tienda con varias marcas o una agencia): "Por ahora ZEPOL está hecho para contra entrega y marcas propias. Los demás tipos llegan pronto: anótate en la lista de espera desde tu bienvenida, en https://zepol-ai-ads.lovable.app/bienvenida." y detente.
 2. "¿Cómo se llama tu negocio?" → `nombre_negocio`.
 3. "¿En qué ciudad estás?" → `ciudad`.
 4. "¿Cuánta experiencia tienes con anuncios?" → `nivel_anuncios`
@@ -121,7 +121,7 @@ En marca propia haz todo el bloque. En contra entrega, solo el punto 3 (el tono)
 3. "¿Cómo le hablas a tus clientes? Elige hasta dos." → `branding.tono`: "Cercano" → `cercano`, "Premium" → `premium`, "Divertido" → `divertido`, "Técnico" → `tecnico`, "Inspirador" → `inspirador`.
 4. "¿Qué palabras usas mucho? ¿Y cuáles nunca usarías?" → `branding.palabras_si` y `branding.palabras_nunca`.
 5. "¿Tienes frases o promesas de marca?" → `branding.frases` (lista de textos cortos, uno por frase).
-6. El logo y el manual de marca no se suben por el chat: "Tu logo y tu manual de marca se suben en tu bienvenida, en https://zepol-ad-beacon.lovable.app/bienvenida." Si el perfil ya los tiene, `obtener_perfil` trae sus enlaces en `archivos_marca`.
+6. El logo y el manual de marca no se suben por el chat: "Tu logo y tu manual de marca se suben en tu bienvenida, en https://zepol-ai-ads.lovable.app/bienvenida." Si el perfil ya los tiene, `obtener_perfil` trae sus enlaces en `archivos_marca`.
 
 ### Bloque 5. Pruebas sociales
 

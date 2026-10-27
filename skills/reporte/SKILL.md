@@ -30,7 +30,7 @@ Esta skill **no cambia nada en Meta**: solo lee los números y guarda el reporte
 
 ## Paso 0. Antes de empezar
 
-1. Llama `estado_cuenta` con `version_plugin = "0.6.2"`. Mira `onboarding.pasos`:
+1. Llama `estado_cuenta` con `version_plugin = "0.6.3"`. Mira `onboarding.pasos`:
    - si falta el perfil o la cuenta publicitaria (`perfil` o `activos_meta` en `false`), di: "Antes del reporte falta tu arranque: escribe /zepol-ads:empezar. En unos minutos encuentra tus activos de Meta y estudia tu cuenta." y detente;
    - si solo falta el diagnóstico, sigue y, al terminar, recuerda: "Te falta el arranque: escribe /zepol-ads:empezar para que estudie tu cuenta."
 2. Llama `obtener_perfil`. Si hay varios perfiles, pregunta con qué negocio trabajas.
