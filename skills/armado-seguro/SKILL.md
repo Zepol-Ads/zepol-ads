@@ -14,7 +14,7 @@ La estructura, los presupuestos, los públicos, los textos, los creativos y los 
 1. Candado del editor (regla 1).
 2. Crear la campaña y quitarle el catálogo (regla 2).
 3. Crear los conjuntos con inicio programado (regla 7).
-4. Subir las imágenes por URL pública con `ads_creative_upload_media`.
+4. Subir las imágenes que el alumno aprobó, por URL pública, con `ads_creative_upload_media` (regla 12).
 5. Crear los anuncios: imagen con `link_data` en línea (regla 4) o ganadores por publicación (regla 5), siempre con las mejoras en `OPT_OUT` (regla 3) y las UTM (regla 6).
 6. Validar el borrador (regla 8).
 7. Revisión con el alumno y publicación solo con un "sí" explícito (regla 10).
@@ -278,7 +278,21 @@ Si falta algo o no coincide:
 ## 12. Otros datos técnicos del conector
 
 - Pide solo los campos que necesitas en `ads_get_ad_entities`: las respuestas son grandes y consumen el plan de Claude del alumno.
-- Las imágenes se suben por URL pública. Las de `generar_imagen` ya vienen alojadas en Zepol Cloud. No uses alojamientos temporales públicos.
+- Las imágenes se suben por URL pública con `ads_creative_upload_media`, con estos datos exactos:
+
+  ```json
+  {
+    "ad_account_id": "{ID DE LA CUENTA, SIN act_}",
+    "upload_source": "URL",
+    "media_type": "IMAGE",
+    "media_url": "{LINK DE LA IMAGEN}"
+  }
+  ```
+
+  - Las de `generar_imagen` ya vienen alojadas en Zepol Cloud: `media_url` es `creativo.url` (la respuesta lo trae listo en `subir_a_meta`; si se cortó, búscala con `ver_creativos`). Súbela solo después de que el alumno la vea y la apruebe.
+  - De la respuesta toma el `image_hash` para el anuncio (regla 4).
+  - Las imágenes de ZEPOL pueden venir en WebP. TODO(prueba): confirmar en la primera prueba real que Meta las acepta; si no, ZEPOL las pasa a JPG desde el servidor. Si la subida falla por el formato, regístralo con `registrar_error` y no la conviertas tú.
+  - No uses alojamientos temporales públicos.
 - WhatsApp. TODO(prueba): todavía sin probar de punta a punta.
   - El conjunto lleva `destination_type: WHATSAPP` y el botón es `WHATSAPP_MESSAGE`, sin enlace web.
   - La página necesita un número de WhatsApp Business verificado y vinculado. Sin eso, el borrador se crea, pero la publicación falla.

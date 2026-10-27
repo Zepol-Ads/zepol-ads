@@ -32,7 +32,7 @@ Antes de cada paso largo, di en una línea qué estás haciendo ("Busco tus acti
 ## Paso 1. Revisar las conexiones
 
 1. **ZEPOL.** Si no ves las herramientas de Zepol Cloud (por ejemplo `estado_cuenta`), di y detente: "ZEPOL ADS todavía no está conectado. En la app de Claude, entra a Customize (Personalizar) → Plugins → ZEPOL ADS, abre la pestaña Connectors (Conectores) y toca Connect (Conectar). Se abre la web de ZEPOL: inicia sesión con la cuenta de tu licencia y toca Permitir acceso. En Claude Code, escribe /mcp y autentica zepol-cloud. Después vuelve a escribir /zepol-ads:empezar."
-2. **Licencia.** Llama `estado_cuenta` con `version_plugin = "0.6.3"` (la versión de este plugin).
+2. **Licencia.** Llama `estado_cuenta` con `version_plugin = "0.6.4"` (la versión de este plugin).
    - Si la licencia no está activa, muestra el aviso de la herramienta tal cual y detente.
    - Si `versiones.actualizar_plugin` es `true`, avísalo en una línea ("Hay una versión nueva de ZEPOL: actualízala en Customize (Personalizar) → Plugins cuando termines.") y sigue.
 3. **Meta.** Si no ves las herramientas del conector oficial de Meta (por ejemplo `ads_get_ad_accounts`), di y detente: "Falta conectar Meta. En la app de Claude, entra a Customize (Personalizar) → Connectors (Conectores), busca Meta Ads, toca Connect (Conectar) y entra con tu cuenta de Facebook. En Claude Code, escribe /mcp y autentica el conector de Meta. Después vuelve a escribir /zepol-ads:empezar."

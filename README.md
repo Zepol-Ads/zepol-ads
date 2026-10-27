@@ -6,7 +6,7 @@ Asistente para crear, publicar, medir y optimizar campañas de Meta (Facebook e 
 - Nada se publica ni gasta sin tu "sí".
 - Funciona con el conector oficial de Meta (`mcp.facebook.com/ads`) y con tu propia cuenta.
 
-Versión 0.6.3. Empieza con un solo comando: `/zepol-ads:empezar` lee lo que llenaste en la web de ZEPOL (tu negocio, tu marca y tus productos), propone el estilo de cada producto, encuentra tus activos de Meta, estudia tu cuenta y te propone tu primera campaña. Las campañas para marcas propias llegan pronto; mientras tanto, ZEPOL ya hace su diagnóstico y sus reportes. Todos los comandos usan Zepol Cloud: el perfil, los productos, la metodología, las imágenes, las recetas, los diagnósticos y los reportes viven en el servidor. Falta la prueba en vivo de punta a punta.
+Versión 0.6.4. Empieza con un solo comando: `/zepol-ads:empezar` lee lo que llenaste en la web de ZEPOL (tu negocio, tu marca y tus productos), propone el estilo de cada producto, encuentra tus activos de Meta, estudia tu cuenta y te propone tu primera campaña. Las campañas para marcas propias llegan pronto; mientras tanto, ZEPOL ya hace su diagnóstico y sus reportes. Todos los comandos usan Zepol Cloud: el perfil, los productos, la metodología, las imágenes, las recetas, los diagnósticos y los reportes viven en el servidor. Falta la prueba en vivo de punta a punta.
 
 ## Comandos
 
@@ -66,7 +66,7 @@ Para probar sin instalar, desde una copia local: `claude --plugin-dir ./plugin`.
 
 En Zepol Cloud, el servidor de ZEPOL, con la cuenta de tu licencia: perfil del negocio (con su diagnóstico), productos (con sus fotos), recetas de campaña, reportes, creativos y pedidos de WhatsApp. Cada alumno solo ve sus propios datos. El plugin no guarda archivos locales.
 
-Ningún dato guarda contraseñas, claves ni tokens. Las imágenes con IA usan los créditos de ZEPOL que trae tu licencia: no necesitas ninguna clave.
+Ningún dato guarda contraseñas, claves ni tokens. Las imágenes con IA usan los créditos de ZEPOL que trae tu licencia: no necesitas ninguna clave. Claude te muestra cada imagen antes de subirla a Meta, y la primera corrección de cada imagen es gratis.
 
 ## Servidor de ZEPOL
 
@@ -79,7 +79,7 @@ Herramientas de Zepol Cloud que usan las skills:
 
 - perfil y productos: `obtener_perfil`, `guardar_perfil`, `guardar_producto` y `guardar_diagnostico`;
 - metodología: `obtener_metodologia` y `evaluar_conjuntos`;
-- campañas: `generar_imagen`, `guardar_receta`, `listar_recetas` y `obtener_receta`;
+- campañas: `generar_imagen`, `ver_creativos`, `guardar_receta`, `listar_recetas` y `obtener_receta`;
 - resultados: `guardar_reporte`, `listar_reportes`, `registrar_pedidos_whatsapp` y `obtener_pedidos_whatsapp`;
 - cuenta: `estado_cuenta`, `obtener_novedades`, `registrar_feedback` y `registrar_error`.
 

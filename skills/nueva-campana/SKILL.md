@@ -28,7 +28,7 @@ El recorrido completo: metodología de Zepol Cloud por etapa → `guardar_produc
 
 ## Paso 0. Antes de empezar
 
-1. Llama `estado_cuenta` con `version_plugin = "0.6.3"`. Si `onboarding.arranque_completo` es `false`, di: "Antes de armar una campaña falta tu arranque: escribe /zepol-ads:empezar. En unos minutos encuentra tus activos de Meta, estudia tu cuenta y te deja listo." y detente. Si `/zepol-ads:empezar` te trajo hasta aquí, el arranque ya está hecho.
+1. Llama `estado_cuenta` con `version_plugin = "0.6.4"`. Si `onboarding.arranque_completo` es `false`, di: "Antes de armar una campaña falta tu arranque: escribe /zepol-ads:empezar. En unos minutos encuentra tus activos de Meta, estudia tu cuenta y te deja listo." y detente. Si `/zepol-ads:empezar` te trajo hasta aquí, el arranque ya está hecho.
 2. Llama `obtener_perfil`. Si hay varios perfiles, pregunta con qué negocio trabajas.
    - Si `categoria` es `marca_propia`, di: "Las campañas para marcas propias llegan pronto, con su propia metodología. Mientras tanto, puedo darte el reporte de tus campañas actuales con /zepol-ads:reporte: cuánto gastaste, cuántas ventas tuviste y cuánto te costó cada una." y detente. No le ofrezcas /zepol-ads:optimizar: todavía usa las reglas de contra entrega.
 3. Confirma que el conector de Meta está disponible. Si no: "No encuentro el conector de Meta. En la app de Claude, entra a Customize (Personalizar) → Connectors (Conectores), busca Meta Ads, toca Connect (Conectar) y entra con tu cuenta de Facebook. En Claude Code, escribe /mcp y autentica el conector de Meta. Después vuelve a correr /zepol-ads:nueva-campana."
@@ -95,11 +95,20 @@ El canal `shopify` de la metodología es la web con formulario contra entrega, s
 ## Paso 5. Creativos
 
 - **Ganadores que se reutilizan**: van por su publicación (`object_story_id` + `url_tags`), con la regla 5 de `armado-seguro`. Cuáles se reutilizan sale de la metodología (`creativos`) y del diagnóstico.
-- **Imágenes nuevas**: genéralas con `generar_imagen` (`producto_id`, `temperatura`, `angulo` y los textos). En `angulo` va solo el ángulo: ZEPOL agrega solo el estilo del producto y los colores de la marca. Usa la primera foto guardada del producto; pasa `foto_producto_url` solo si el alumno quiere otra foto. Zepol Cloud aloja cada imagen y devuelve una URL pública: súbela a la cuenta con `ads_creative_upload_media`.
-  - **Créditos:** cada imagen o edición usa 1 crédito de ZEPOL del alumno. Antes de generar, dile cuántas imágenes vas a crear y cuántos créditos le quedan (`estado_cuenta` → `creditos`), y pregunta si sigues. Si algo falla, el crédito vuelve solo.
-  - Si `generar_imagen` dice que no le quedan créditos o que la creación de imágenes todavía no está activa, díselo y sigue con los creativos que el alumno tiene.
+- **Imágenes nuevas**: genéralas con `generar_imagen` (`producto_id`, `temperatura`, `angulo` y los textos). En `angulo` va solo el ángulo: ZEPOL agrega solo el estilo del producto y los colores de la marca. Usa la primera foto guardada del producto; pasa `foto_producto_url` solo si el alumno quiere otra foto. Zepol Cloud aloja cada imagen y devuelve su link y la imagen misma.
+  - **Créditos:** cada imagen usa 1 crédito de ZEPOL del alumno. La primera corrección de cada imagen es gratis; las siguientes usan 1 crédito. Antes de generar, dile cuántas imágenes vas a crear y cuántos créditos le quedan (`estado_cuenta` → `creditos`), y pregunta si sigues. Si algo falla, el crédito vuelve solo.
+  - **Tiempo:** crear una imagen tarda hasta 2 minutos; avísale al alumno antes de pedirla. Si la llamada se corta o no llega la respuesta, no la pidas otra vez: usa `ver_creativos` con el `producto_id` y toma la más reciente. Así no paga dos veces.
+  - **Revisión antes de subirla:** muéstrale la imagen al alumno y revísala con él:
+    - los textos, escritos tal cual y con sus tildes, sin letras de más ni palabras inventadas;
+    - el producto, parecido a la foto real (forma, colores, etiquetas y logo);
+    - nada importante (textos, producto o logo) fuera de la zona segura que indica la respuesta (`revisar`).
+
+    Si algo no está bien, ofrécele una corrección antes de subirla a Meta y recuérdale que la primera corrección de cada imagen es gratis (`correccion` en la respuesta). Si no tienes la imagen a la vista (por ejemplo, porque la recuperaste), pídela con `ver_creativos` y `ver_imagen: true`.
+  - **Corregir:** llama `generar_imagen` con el mismo `producto_id`, `temperatura` y `angulo`, más `editar_creativo_id` (el `id` del creativo que hay que arreglar) y `cambios` (qué cambiar, en una frase concreta: "corrige la tilde de Pídela", "sube el texto principal"). Envía `textos` solo si cambian. La corrección es un creativo nuevo: desde ahí usa su `id`.
+  - **Subirla a Meta:** solo cuando el alumno la apruebe, con `ads_creative_upload_media`: `upload_source: "URL"`, `media_type: "IMAGE"` y `media_url` = el link de la imagen (`creativo.url`; la respuesta lo trae listo en `subir_a_meta`). Toma el `image_hash` que devuelve para el anuncio (regla 4 de `armado-seguro`).
+  - Si `generar_imagen` dice que no le quedan créditos, que llegó al límite de imágenes de hoy, que la creación de imágenes quedó en pausa hasta mañana o que todavía no está activa, díselo y sigue con los creativos que el alumno tiene.
   - Si `generar_imagen` dice que falta la foto, vuelve al paso 1 y pide el enlace de una foto real del producto.
-  - Guarda el `id` de cada creativo que devuelve: va en la receta (`creativo.creativo_id`).
+  - Guarda el `id` de cada creativo aprobado: va en la receta (`creativo.creativo_id`).
 - **Videos o imágenes del alumno**: necesitan una URL pública para subirse. Por ahora pídele al alumno un enlace público propio (por ejemplo, de su tienda). No uses alojamientos temporales públicos.
 - **Textos**: escríbelos con la metodología (`textos`), que trae las estructuras y los bancos de frases. Ningún texto ni imagen lleva el precio. Muéstralos al alumno; si pide cambios, ajústalos respetando esas reglas.
 
